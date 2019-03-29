@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "955389676443",
+    "firebase_url": "https://vikenpassage.firebaseio.com",
+    "project_id": "vikenpassage",
+    "storage_bucket": "vikenpassage.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955389676443:android:75cdc6828ca09ce2",
+        "android_client_info": {
+          "package_name": "enal1586.ju.viken_passage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "955389676443-rohtbp80buloov756cq2pt1508ald09m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "enal1586.ju.viken_passage",
+            "certificate_hash": "545d91a8dff801120055918e43e190caac1f1c26"
+          }
+        },
+        {
+          "client_id": "955389676443-16mamkcda88akoh793q883ldjsvkb366.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQIwmpRXtBdHl9TpKyJ41xu4Cvklq_l84"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "955389676443-16mamkcda88akoh793q883ldjsvkb366.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
