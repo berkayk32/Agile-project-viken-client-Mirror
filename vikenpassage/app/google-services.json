@@ -23,8 +23,12 @@
           }
         },
         {
-          "client_id": "955389676443-16mamkcda88akoh793q883ldjsvkb366.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "955389676443-f1vmv6mh5093591tai3119sv7h78ngmv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "enal1586.ju.viken_passage",
+            "certificate_hash": "f5495f2971c025d63ceda167e1d6476b963dbefe"
+          }
         }
       ],
       "api_key": [
@@ -33,20 +37,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "955389676443-16mamkcda88akoh793q883ldjsvkb366.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }
