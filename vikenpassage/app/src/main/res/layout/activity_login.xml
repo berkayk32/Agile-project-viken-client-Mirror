@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".controllers.AccountActivity">
+
+    <EditText
+        android:id="@+id/etUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/user_name"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/unPwAligner"
+        android:layout_toEndOf="@id/unPwAligner" />
+
+    <TextView
+        android:id="@+id/unPwAligner"
+        android:layout_height="50dp"
+        android:layout_width="20dp"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@id/unPwAligner"
+        android:layout_toStartOf="@id/unPwAligner" />
+
+    <Button
+        android:id="@+id/btnLogIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/log_in"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/unPwAligner"
+        android:layout_toLeftOf="@id/btnLogInSignUpAligner"
+        android:layout_toStartOf="@id/btnLogInSignUpAligner" />
+
+    <TextView
+        android:id="@+id/btnLogInSignUpAligner"
+        android:layout_height="50dp"
+        android:layout_width="0dp"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/unPwAligner"
+        android:layout_toRightOf="@+id/btnLogInSignUpAligner"
+        android:layout_toEndOf="@+id/btnLogInSignUpAligner" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/btnLogInGoogle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnLogIn"
+        android:layout_centerHorizontal="true"
+        android:text="@string/log_in"/>
+
+</RelativeLayout>
