@@ -1,9 +1,9 @@
 package enal1586.ju.viken_passage.controllers;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import enal1586.ju.viken_passage.R;
 
@@ -20,11 +20,11 @@ public class AccountActivity extends AppCompatActivity {
                 googleLogIn(view);
             }
         });
-        
     }
     
     public void googleLogIn(View view) {
-        Toast.makeText(this, "Clicked Google login!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, GoogleLogInActivity.class);
+        startActivity(intent);
     }
     
 }
