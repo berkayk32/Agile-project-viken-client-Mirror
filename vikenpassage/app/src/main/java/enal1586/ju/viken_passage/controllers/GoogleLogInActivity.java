@@ -24,6 +24,8 @@ import enal1586.ju.viken_passage.R;
 
 public class GoogleLogInActivity extends AppCompatActivity {
     
+    public static String LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
+    
     private GoogleSignInOptions gso;
     private GoogleSignInClient mGoogleSignInClient;
     private final int RC_SIGN_IN = 1000;
@@ -42,14 +44,32 @@ public class GoogleLogInActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         
         mAuth = FirebaseAuth.getInstance();
-        signIn();
-        
     }
     
     @Override
     public void onStart() {
         super.onStart();
-        getLoggedInUser();
+    
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            finish();
+        }
+    
+        boolean loginAttempt = extras.getBoolean(LOGIN_ATTEMPT);
+    
+        FirebaseUser loggedInUser = getLoggedInUser();
+        if (loggedInUser == null) {
+            signIn();
+        }
+        else {
+            if (!loginAttempt) {
+                signOut();
+            }
+            else {
+                Toast.makeText(this, "You're already logged in.", Toast.LENGTH_SHORT).show();
+            }
+            finish();
+        }
     }
     
     
@@ -101,7 +121,7 @@ public class GoogleLogInActivity extends AppCompatActivity {
                     FirebaseUser loggedInUser = getLoggedInUser();
                     Toast.makeText(GoogleLogInActivity.this, "Welcome" + loggedInUser.getEmail(), Toast.LENGTH_SHORT).show();
                     FirebaseUser user = mAuth.getCurrentUser();
-                    //updateUI(user);
+                    finish();
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(GoogleLogInActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
@@ -115,7 +135,7 @@ public class GoogleLogInActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        signOut();
+        finish();
     }
     
 }
