@@ -124,7 +124,6 @@ public class GoogleLogInActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        signOut();
     }
     
 }
