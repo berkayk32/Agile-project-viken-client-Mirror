@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import enal1586.ju.viken_passage.R;
+import enal1586.ju.viken_passage.models.CurrentUser;
 
 public class GoogleLogInActivity extends AppCompatActivity {
     
@@ -49,19 +50,28 @@ public class GoogleLogInActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        getLoggedInUser();
+        initiateUser();
     }
     
     
-    private FirebaseUser getLoggedInUser() {
-        // Check if user is signed in (non-null) and update UI accordingly.
-        return mAuth.getCurrentUser();
+    private void initiateUser() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            CurrentUser.logIn(currentUser);
+        }
+    }
+    
+    private void deInitiateUser() {
+        CurrentUser.logOut();
     }
     
     private void signOut() {
-        FirebaseUser loggedInUser = getLoggedInUser();
-        Toast.makeText(this, "Bye" + loggedInUser.getEmail(), Toast.LENGTH_SHORT).show();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        Toast.makeText(this,
+                "Successfully logged out: " + currentUser.getEmail(),
+                Toast.LENGTH_SHORT).show();
         FirebaseAuth.getInstance().signOut();
+        CurrentUser.logOut();
     }
     
     private void signIn() {
@@ -97,14 +107,13 @@ public class GoogleLogInActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    FirebaseUser loggedInUser = getLoggedInUser();
-                    Toast.makeText(GoogleLogInActivity.this, "Welcome" + loggedInUser.getEmail(), Toast.LENGTH_SHORT).show();
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    //updateUI(user);
+                    // If sign in success, do stuff
+                    initiateUser();
                 } else {
                     // If sign in fails, display a message to the user.
-                    Toast.makeText(GoogleLogInActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoogleLogInActivity.this,
+                            "Authentication Failed.",
+                            Toast.LENGTH_SHORT).show();
                 
                 }
                 // ...
@@ -115,7 +124,6 @@ public class GoogleLogInActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        signOut();
     }
     
 }

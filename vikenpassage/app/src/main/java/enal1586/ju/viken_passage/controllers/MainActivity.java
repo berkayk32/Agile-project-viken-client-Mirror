@@ -20,4 +20,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     
+    public void btnDBConnectClicked(View view) {
+        Intent intent = new Intent(this, DatabaseCommunication.class);
+        startActivity(intent);
+    }
+    
 }
