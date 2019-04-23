@@ -1,137 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
-<LinearLayout
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:layout_marginStart="8dp"
-android:layout_marginLeft="8dp"
-android:layout_marginTop="8dp"
-android:layout_marginEnd="8dp"
-android:layout_marginRight="8dp"
-android:layout_marginBottom="8dp"
-android:gravity="center"
-android:orientation="vertical"
-app:layout_constraintBottom_toBottomOf="parent"
-app:layout_constraintEnd_toEndOf="parent"
-app:layout_constraintHorizontal_bias="1.0"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toTopOf="parent"
-app:layout_constraintVertical_bias="0.0">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:orientation="vertical">
 
-<ImageView
-    android:id="@+id/imageView3"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="32dp"
-    android:layout_marginLeft="32dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="33dp"
-    android:layout_marginRight="33dp"
-    android:layout_marginBottom="10dp"
-    android:src="@drawable/toll2"
-    app:layout_constraintBottom_toTopOf="@+id/editText3"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="33dp"
+            android:layout_marginRight="33dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/toll2" />
 
-<TextView
-    android:id="@+id/textView2"
-    android:layout_width="342dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="32dp"
-    android:layout_marginLeft="32dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginEnd="32dp"
-    android:layout_marginRight="32dp"
-    android:layout_marginBottom="10dp"
-    android:accessibilityHeading="false"
-    android:gravity="center_horizontal"
-    android:text="Viken"
-    android:textSize="30sp"
-    android:textStyle="bold|italic"
-    app:layout_constraintBottom_toTopOf="@+id/editText3"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.4"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/imageView3"
-    app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="342dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="10dp"
+            android:accessibilityHeading="false"
+            android:gravity="center_horizontal"
+            android:text="Viken"
+            android:textSize="30sp"
+            android:textStyle="bold|italic" />
 
-<EditText
-    android:id="@+id/editText3"
-    android:layout_width="334dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="50dp"
-    android:layout_marginLeft="50dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginEnd="50dp"
-    android:layout_marginRight="50dp"
-    android:layout_marginBottom="10dp"
-    android:ems="10"
-    android:gravity="center"
-    android:inputType="textPersonName"
-    android:text="E-mail"
-    app:layout_constraintBottom_toTopOf="@+id/Password"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.826"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="334dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="10dp"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="E-mail" />
 
-<EditText
-    android:id="@+id/Password"
-    android:layout_width="333dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="50dp"
-    android:layout_marginLeft="50dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginEnd="50dp"
-    android:layout_marginRight="50dp"
-    android:layout_marginBottom="10dp"
-    android:ems="10"
-    android:gravity="center"
-    android:inputType="textPassword"
-    android:text="Password"
-    app:layout_constraintBottom_toTopOf="@+id/button3"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.818"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        <EditText
+            android:id="@+id/Password"
+            android:layout_width="333dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="10dp"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="textPassword"
+            android:text="Password" />
 
-<Button
-    android:id="@+id/button3"
-    android:layout_width="332dp"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="50dp"
-    android:layout_marginLeft="50dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginEnd="50dp"
-    android:layout_marginRight="50dp"
-    android:layout_marginBottom="10dp"
-    android:text="Login"
-    app:layout_constraintBottom_toTopOf="@+id/button4"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/Password" />
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="332dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="10dp"
+            android:text="Login" />
 
-<Button
-    android:id="@+id/button4"
-    android:layout_width="333dp"
-    android:layout_height="37dp"
-    android:layout_marginStart="50dp"
-    android:layout_marginLeft="50dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginEnd="50dp"
-    android:layout_marginRight="50dp"
-    android:layout_marginBottom="10dp"
-    android:text="Register"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/button3" />
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="333dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="10dp"
+            android:text="Register" />
 
-</LinearLayout>
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
