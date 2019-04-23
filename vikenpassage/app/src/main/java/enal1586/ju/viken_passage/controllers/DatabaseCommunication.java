@@ -7,14 +7,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +30,9 @@ public class DatabaseCommunication extends AppCompatActivity {
     //private final String NETWORK_INTERFACE_BLUETOOTH = "wlan0";
     private final String NETWORK_INTERFACE_WIFI = "wlan0";
     private final String MAC_ADRESS = "Mac Addresses";
+    private final String USERS = "Users";
+
+    private final String TEMP_UNIQUE_EMAIL_ADRESS = "temporary@unique.email.com";
     
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     
@@ -46,70 +51,72 @@ public class DatabaseCommunication extends AppCompatActivity {
         ListView listView = findViewById(R.id.listViewOfStuff);
         listView.setAdapter(adapter);
     
-        readData();
-        write();
+        //readData();
+        //registerUser();
+        syncUser();
     }
     
-    private void write() {
+    private void registerUser() {
         // Create a new user with a first and last name
         Map<String, Object> user = new HashMap<>();
         
         String macAddr = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
-        user.put("address", macAddr);
-    
+        user.put("User Name", TEMP_UNIQUE_EMAIL_ADRESS);
+
         // Add a new document with a generated ID
-        db.collection(MAC_ADRESS).add(user)
-        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection(MAC_ADRESS).document(macAddr).set(user)
+        .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
+            public void onSuccess(Void aVoid) {
                 Toast.makeText(DatabaseCommunication.this, "Success!", Toast.LENGTH_SHORT).show();
             }
-        })
-        .addOnFailureListener(new OnFailureListener() {
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(DatabaseCommunication.this, "Error adding document", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
-    
-    private void readData() {
-        db.collection(MAC_ADRESS).get()
-        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+    private void syncUser() {
+        String macAddr = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
+        DocumentReference contactListener = db.collection(USERS).document("testMail");
+
+        contactListener.addSnapshotListener(new EventListener< DocumentSnapshot >() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String id = document.getId();
-                        Map<String, Object> data = document.getData();
-                        String concatData = "";
-                        if (data.containsKey("address")) {
-                            String address = data.get("address").toString();
-                            if (address != null) {
-                                concatData = address;
-                            }
-                            String userName = "";
-                            if (data.containsKey("Email")) {
-                                userName = data.get("Email").toString();
-                            }
-    
-                            if (userName != null) {
-                                concatData += " " + userName;
-                            }
-                            
-                        }
-                        if (concatData != "") {
-                            list.add(concatData);
-                        }
-                    }
-                    adapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(DatabaseCommunication.this,
-                            "Error getting documents.",
-                            Toast.LENGTH_SHORT).show();
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                if (e != null) {
+                    Toast.makeText(DatabaseCommunication.this, "Something went wrong when trying to sync user data.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    Toast.makeText(DatabaseCommunication.this, "Current data:" + documentSnapshot.getData(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
     
+    private void readData() {
+        db.collection(MAC_ADRESS).document(TEMP_UNIQUE_EMAIL_ADRESS).get()
+        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot result = task.getResult();
+                }
+            }
+        }).addOnCanceledListener(new OnCanceledListener() {
+            @Override
+            public void onCanceled() {
+
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // TODO: Unsync user..!
+        finish();
+    }
 }

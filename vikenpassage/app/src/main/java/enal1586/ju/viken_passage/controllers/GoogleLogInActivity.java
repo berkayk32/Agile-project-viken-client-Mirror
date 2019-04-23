@@ -13,18 +13,30 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import enal1586.ju.viken_passage.R;
+import enal1586.ju.viken_passage.models.NetworkUtils;
 
 public class GoogleLogInActivity extends AppCompatActivity {
     
     public static String LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
+
+    private final String NETWORK_INTERFACE_WIFI = "wlan0";
+    private final String MAC_ADRESS = "Mac Addresses";
+    private final String USERS = "Users";
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     
     private GoogleSignInOptions gso;
     private GoogleSignInClient mGoogleSignInClient;
@@ -58,11 +70,53 @@ public class GoogleLogInActivity extends AppCompatActivity {
             signIn();
         }
     }
-    
-    
     private void initiateUser() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        registerUserToMacAddress();
+        registerUser();
     }
+    private void registerUser() {
+        Map<String, Object> user = new HashMap<>();
+
+        String userName = mAuth.getCurrentUser().getEmail();
+        user.put("First Name", "Oskar");
+        user.put("Last Name", "Svensson");
+        user.put("Balance", 500);
+
+        db.collection(USERS).document("testMail").set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // TODO: Handle this if it's needed.
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
+    private void registerUserToMacAddress() {
+        Map<String, Object> user = new HashMap<>();
+
+        String macAddr = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
+        String userName = mAuth.getCurrentUser().getEmail();
+        user.put("User Name", userName);
+
+        db.collection(MAC_ADRESS).document(macAddr).set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // TODO: Handle this if it's needed.
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
 
     
     private void signOut() {
@@ -110,6 +164,7 @@ public class GoogleLogInActivity extends AppCompatActivity {
                     FirebaseUser loggedInUser = mAuth.getCurrentUser();
                     Toast.makeText(GoogleLogInActivity.this, "Welcome " + loggedInUser.getEmail(), Toast.LENGTH_SHORT).show();
                     FirebaseUser user = mAuth.getCurrentUser();
+                    initiateUser();
                     finish();
                 } else {
                     // If sign in fails, display a message to the user.
