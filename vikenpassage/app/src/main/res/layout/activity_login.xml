@@ -57,7 +57,7 @@
             android:ems="10"
             android:gravity="center"
             android:inputType="textPersonName"
-            android:text="E-mail" />
+            android:hint="E-mail" />
 
         <EditText
             android:id="@+id/Password"
@@ -72,7 +72,7 @@
             android:ems="10"
             android:gravity="center"
             android:inputType="textPassword"
-            android:text="Password" />
+            android:hint="Password" />
 
         <Button
             android:id="@+id/button3"
@@ -97,6 +97,13 @@
             android:layout_marginRight="50dp"
             android:layout_marginBottom="10dp"
             android:text="Register" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btnLogInGoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/log_in"/>
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

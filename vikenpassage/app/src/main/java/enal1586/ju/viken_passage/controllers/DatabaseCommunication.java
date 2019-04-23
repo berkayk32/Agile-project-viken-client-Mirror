@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import enal1586.ju.viken_passage.R;
-import enal1586.ju.viken_passage.models.CurrentUser;
 import enal1586.ju.viken_passage.models.NetworkUtils;
 
 public class DatabaseCommunication extends AppCompatActivity {
@@ -57,10 +56,6 @@ public class DatabaseCommunication extends AppCompatActivity {
         
         String macAddr = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
         user.put("address", macAddr);
-        CurrentUser currentUser = CurrentUser.getInstance();
-        if (currentUser.isLoggedIn()) {
-            user.put("Email", currentUser.getUserName());
-        }
     
         // Add a new document with a generated ID
         db.collection(MAC_ADRESS).add(user)

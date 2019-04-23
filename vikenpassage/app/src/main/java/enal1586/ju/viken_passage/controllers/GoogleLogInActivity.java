@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import enal1586.ju.viken_passage.R;
-import enal1586.ju.viken_passage.models.CurrentUser;
 
 public class GoogleLogInActivity extends AppCompatActivity {
     
@@ -50,40 +49,21 @@ public class GoogleLogInActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-    
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
+
+        if (mAuth.getCurrentUser() != null) {
+            signOut();
             finish();
-        }
-    
-        boolean loginAttempt = extras.getBoolean(LOGIN_ATTEMPT);
-    
-        FirebaseUser loggedInUser = mAuth.getCurrentUser();
-        if (loggedInUser == null) {
-            signIn();
         }
         else {
-            if (!loginAttempt) {
-                signOut();
-            }
-            else {
-                Toast.makeText(this, "You're already logged in.", Toast.LENGTH_SHORT).show();
-            }
-            finish();
+            signIn();
         }
     }
     
     
     private void initiateUser() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            CurrentUser.logIn(currentUser);
-        }
     }
-    
-    private void deInitiateUser() {
-        CurrentUser.logOut();
-    }
+
     
     private void signOut() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -91,7 +71,6 @@ public class GoogleLogInActivity extends AppCompatActivity {
                 "Successfully logged out: " + currentUser.getEmail(),
                 Toast.LENGTH_SHORT).show();
         FirebaseAuth.getInstance().signOut();
-        CurrentUser.logOut();
     }
     
     private void signIn() {
@@ -129,7 +108,7 @@ public class GoogleLogInActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
                     FirebaseUser loggedInUser = mAuth.getCurrentUser();
-                    Toast.makeText(GoogleLogInActivity.this, "Welcome" + loggedInUser.getEmail(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GoogleLogInActivity.this, "Welcome " + loggedInUser.getEmail(), Toast.LENGTH_SHORT).show();
                     FirebaseUser user = mAuth.getCurrentUser();
                     finish();
                 } else {
@@ -137,7 +116,6 @@ public class GoogleLogInActivity extends AppCompatActivity {
                     Toast.makeText(GoogleLogInActivity.this,
                             "Authentication Failed.",
                             Toast.LENGTH_SHORT).show();
-                
                 }
                 // ...
             }
