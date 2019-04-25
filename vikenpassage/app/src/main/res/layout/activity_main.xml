@@ -11,17 +11,8 @@
 
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/my_account"
-        android:onClick="btnMyAccountClicked"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/btnMyAccount"
-        android:text="Db Connect"
-        android:onClick="btnDBConnectClicked"/>
+        android:text="Send notification"
+        android:onClick="sendNotification"/>
 
 
 </RelativeLayout>
