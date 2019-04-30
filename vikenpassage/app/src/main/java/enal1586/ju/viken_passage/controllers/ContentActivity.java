@@ -1,8 +1,11 @@
 package enal1586.ju.viken_passage.controllers;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -28,6 +31,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import enal1586.ju.viken_passage.R;
+import enal1586.ju.viken_passage.models.HistoryModel;
 import enal1586.ju.viken_passage.models.NetworkUtils;
 
 public class ContentActivity extends AppCompatActivity {
@@ -52,7 +56,7 @@ public class ContentActivity extends AppCompatActivity {
     
         list = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
-    
+
         ListView listView = findViewById(R.id.listViewOfStuff);
         listView.setAdapter(adapter);
 
@@ -116,23 +120,44 @@ public class ContentActivity extends AppCompatActivity {
                     return;
                 } else {
                     List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
+                    final ArrayList<HistoryModel> historyModels;
+                    CustomAdapter adapter;
+                    ListView listView;
+                    listView=(ListView)findViewById(R.id.listViewOfStuff);
+
+                    historyModels= new ArrayList<>();
                     for (int i = 0; i < documents.size(); i++) {
                         DocumentSnapshot documentSnapshot = documents.get(i);
-
                         Map<String, Object> data = documentSnapshot.getData();
-                        list.add(data.get("payment").toString());
+                        historyModels.add(new HistoryModel(data.get("payment").toString(), data.get("date").toString()));
+
+
+                    }
+                    adapter= new CustomAdapter(historyModels,getApplicationContext());
+
+
+                    listView.setAdapter(adapter);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                            HistoryModel historyModel= historyModels.get(position);
+
+                            Snackbar.make(view, historyModel.getPayment()+"\n"+historyModel.getDate(), Snackbar.LENGTH_LONG)
+                                    .setAction("No action", null).show();
+                        }
+                    });
+
+
+                        //list.add(data.get("payment").toString());
+
 
                     }
                     adapter.notifyDataSetChanged();
                 }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Error getting data!!!", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+            });
+        }
+
 
     @Override
     public void onBackPressed() {
