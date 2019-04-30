@@ -3,8 +3,10 @@ package enal1586.ju.viken_passage.controllers;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCanceledListener;
@@ -12,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,9 +23,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -31,7 +39,9 @@ import enal1586.ju.viken_passage.R;
 import enal1586.ju.viken_passage.models.NetworkUtils;
 
 public class ContentActivity extends AppCompatActivity {
-    
+
+    TextView freePassLabel;
+
     //private final String NETWORK_INTERFACE_BLUETOOTH = "wlan0";
     private final String NETWORK_INTERFACE_WIFI = "wlan0";
     private final String MAC_ADRESS = "Mac Addresses";
@@ -49,7 +59,9 @@ public class ContentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
-    
+
+        freePassLabel = findViewById(R.id.freePassLabel);
+
         list = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
     
@@ -96,15 +108,80 @@ public class ContentActivity extends AppCompatActivity {
                     return;
                 }
                 if (documentSnapshot != null && documentSnapshot.exists()) {
-                    Map<String, Object> data = documentSnapshot.getData();
+                    Date freePass = documentSnapshot.getTimestamp("freePass").toDate();
+                    Date currentTime = Calendar.getInstance().getTime();
+
+                    if (currentTime.after(freePass)) {
+                        // Have not paid
+                        freePassLabel.setText("You shall not pass!");
+                    }
+                    else {
+                        // Already paid
+                        updateTimeLeft(currentTime, freePass);
+                    }
 
                     list.clear();
                     updateHistory();
 
-                    adapter.notifyDataSetChanged();
                 }
             }
         });
+    }
+
+    private void updateTimeLeft(Date currentTime, Date freePass) {
+        // TODO REFACTOR!
+
+        SimpleDateFormat dayPattern = new SimpleDateFormat("dd");
+        String untilDay = dayPattern.format(freePass);
+        String currentDay = dayPattern.format(currentTime);
+
+        SimpleDateFormat secondPattern = new SimpleDateFormat("ss");
+        String untilSecond = secondPattern.format(freePass);
+        String currentSecond = secondPattern.format(currentTime);
+        int seconds = Integer.valueOf(untilSecond) - Integer.valueOf(currentSecond);
+        int secondsHasPassed = 0;
+        if (seconds < 0) {
+            secondsHasPassed = 1;
+            seconds = seconds + 60;
+        }
+        String secondsLeft = seconds < 10 ? "0" + seconds : String.valueOf(seconds);
+
+        SimpleDateFormat minutePattern = new SimpleDateFormat("mm");
+        String untilMinute = minutePattern.format(freePass);
+        String currentMinute = minutePattern.format(currentTime);
+        int minutes = Integer.valueOf(untilMinute) - Integer.valueOf(currentMinute);
+        int minutesHasPassed = 0;
+        if (minutes < 0) {
+            minutesHasPassed = 1;
+            minutes = minutes + 60;
+        }
+        minutes -= secondsHasPassed;
+        if (minutes < 0) {
+            minutesHasPassed = 1;
+            minutes = 59;
+        }
+        String minutesLeft = minutes < 10 ? ("0" + (minutes)) : String.valueOf(minutes);
+
+        SimpleDateFormat hourPattern = new SimpleDateFormat("HH");
+        String untilHour = hourPattern.format(freePass);
+        String currentHour = hourPattern.format(currentTime);
+        int hours = Integer.valueOf(untilHour) - Integer.valueOf(currentHour);
+        if (!untilDay.equals(currentDay)) {
+            int marginDifference = 1;
+            hours = (24 - hours);
+        }
+        hours -= minutesHasPassed;
+        String hoursLeft = hours < 10 ? "0" + hours : String.valueOf(hours);
+
+
+
+        String timeLeft = hoursLeft + ":" + minutesLeft + ":" + secondsLeft;
+
+        freePassLabel.setText(timeLeft);
+    }
+
+    private void needToPay() {
+        freePassLabel.setText("You have not paid.");
     }
     
     private void updateHistory() {
