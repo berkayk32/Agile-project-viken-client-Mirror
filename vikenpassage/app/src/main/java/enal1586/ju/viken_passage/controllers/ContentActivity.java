@@ -12,15 +12,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import enal1586.ju.viken_passage.R;
 import enal1586.ju.viken_passage.models.NetworkUtils;
@@ -80,7 +85,7 @@ public class ContentActivity extends AppCompatActivity {
     }
 
     private void syncUser() {
-        String macAddr = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
+
         DocumentReference contactListener = db.collection(USERS).document("testMail");
 
         contactListener.addSnapshotListener(new EventListener< DocumentSnapshot >() {
@@ -92,26 +97,39 @@ public class ContentActivity extends AppCompatActivity {
                 }
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     Map<String, Object> data = documentSnapshot.getData();
-                    list.add(data.get("Balance").toString() + data.get("First Name"));
+
+                    list.clear();
+                    updateHistory();
+
                     adapter.notifyDataSetChanged();
                 }
             }
         });
     }
     
-    private void readData() {
-        db.collection(MAC_ADRESS).document(TEMP_UNIQUE_EMAIL_ADRESS).get()
-        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    private void updateHistory() {
+        db.collection(USERS).document("testMail").collection("history")
+        .orderBy("date").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot result = task.getResult();
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                if (documentSnapshots.isEmpty()) {
+                    return;
+                } else {
+                    List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
+                    for (int i = 0; i < documents.size(); i++) {
+                        DocumentSnapshot documentSnapshot = documents.get(i);
+
+                        Map<String, Object> data = documentSnapshot.getData();
+                        list.add(data.get("payment").toString());
+
+                    }
+                    adapter.notifyDataSetChanged();
                 }
             }
-        }).addOnCanceledListener(new OnCanceledListener() {
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onCanceled() {
-
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Error getting data!!!", Toast.LENGTH_LONG).show();
             }
         });
     }
