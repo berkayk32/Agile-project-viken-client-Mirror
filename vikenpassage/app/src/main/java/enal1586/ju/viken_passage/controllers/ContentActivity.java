@@ -25,7 +25,7 @@ import java.util.Map;
 import enal1586.ju.viken_passage.R;
 import enal1586.ju.viken_passage.models.NetworkUtils;
 
-public class DatabaseCommunication extends AppCompatActivity {
+public class ContentActivity extends AppCompatActivity {
     
     //private final String NETWORK_INTERFACE_BLUETOOTH = "wlan0";
     private final String NETWORK_INTERFACE_WIFI = "wlan0";
@@ -43,14 +43,15 @@ public class DatabaseCommunication extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_database_communication);
+        setContentView(R.layout.activity_content);
     
         list = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
     
         ListView listView = findViewById(R.id.listViewOfStuff);
         listView.setAdapter(adapter);
-    
+
+
         //readData();
         //registerUser();
         syncUser();
@@ -68,7 +69,7 @@ public class DatabaseCommunication extends AppCompatActivity {
         .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(DatabaseCommunication.this, "Success!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ContentActivity.this, "Success!", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -86,11 +87,13 @@ public class DatabaseCommunication extends AppCompatActivity {
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                 if (e != null) {
-                    Toast.makeText(DatabaseCommunication.this, "Something went wrong when trying to sync user data.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ContentActivity.this, "Something went wrong when trying to sync user data.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (documentSnapshot != null && documentSnapshot.exists()) {
-                    Toast.makeText(DatabaseCommunication.this, "Current data:" + documentSnapshot.getData(), Toast.LENGTH_SHORT).show();
+                    Map<String, Object> data = documentSnapshot.getData();
+                    list.add(data.get("Balance").toString() + data.get("First Name"));
+                    adapter.notifyDataSetChanged();
                 }
             }
         });

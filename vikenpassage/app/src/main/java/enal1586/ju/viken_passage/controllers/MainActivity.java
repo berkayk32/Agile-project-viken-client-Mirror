@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
     
     public void btnDBConnectClicked(View view) {
-        Intent intent = new Intent(this, DatabaseCommunication.class);
+        Intent intent = new Intent(this, ContentActivity.class);
         startActivity(intent);
     }
     

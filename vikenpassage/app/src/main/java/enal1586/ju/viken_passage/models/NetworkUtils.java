@@ -1,13 +1,8 @@
 package enal1586.ju.viken_passage.models;
 
-import android.provider.Settings;
-import android.widget.Toast;
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
-import enal1586.ju.viken_passage.controllers.DatabaseCommunication;
 //import org.apache.http.conn.util.InetAddressUtils;
 
 // Entire class borrowed from https://stackoverflow.com/questions/6064510/how-to-get-ip-address-of-the-device-from-code/#13007325

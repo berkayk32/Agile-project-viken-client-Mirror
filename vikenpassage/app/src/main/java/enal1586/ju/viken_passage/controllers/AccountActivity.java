@@ -24,7 +24,6 @@ public class AccountActivity extends AppCompatActivity {
     
     public void googleLogIn(View view) {
         Intent intent = new Intent(this, GoogleLogInActivity.class);
-        intent.putExtra(GoogleLogInActivity.LOGIN_ATTEMPT, true);
         startActivity(intent);
     }
     
