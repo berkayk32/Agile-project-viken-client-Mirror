@@ -242,7 +242,8 @@ public class ContentActivity extends AppCompatActivity {
                 for (int i = 0; i < documents.size(); i++) {
                     DocumentSnapshot documentSnapshot = documents.get(i);
                     Map<String, Object> data = documentSnapshot.getData();
-                    historyModels.add(new HistoryModel(data.get("payment").toString(), data.get("date").toString()));
+
+                    historyModels.add(new HistoryModel(data.get("payment").toString(), documentSnapshot.getTimestamp("date").toDate().toString()));
                 }
 
                 adapter= new CustomAdapter(historyModels,getApplicationContext());
