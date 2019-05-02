@@ -158,7 +158,19 @@ public class ContentActivity extends AppCompatActivity {
                     catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
                 } while(currentTime.before(freePass) && timerThread != null && timerThread.getId() == threadId);
+
+                if (timerThread == null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            freePassLabel.setText("You shall not pass!");
+
+                        }
+                    });
+                }
+
             }
         });
         th.start();
