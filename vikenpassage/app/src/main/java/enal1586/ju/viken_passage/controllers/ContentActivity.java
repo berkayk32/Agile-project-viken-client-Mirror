@@ -135,15 +135,9 @@ public class ContentActivity extends AppCompatActivity {
                 Date currentTime = Calendar.getInstance().getTime();
                 timerThread = Thread.currentThread();
 
-                Long threadId;
                 do {
-                    threadId = Thread.currentThread().getId();
-
                     try {
-
                         final String timeLeft = updateTimeLeft(currentTime, freePass);
-
-
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -159,14 +153,13 @@ public class ContentActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                } while(currentTime.before(freePass) && timerThread != null && timerThread.getId() == threadId);
+                } while(currentTime.before(freePass) && timerThread != null && timerThread == Thread.currentThread());
 
-                if (timerThread == null) {
+                if (timerThread != null) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             freePassLabel.setText("You shall not pass!");
-
                         }
                     });
                 }
