@@ -243,9 +243,8 @@ public class ContentActivity extends AppCompatActivity {
                     DocumentSnapshot documentSnapshot = documents.get(i);
                     Map<String, Object> data = documentSnapshot.getData();
                     historyModels.add(new HistoryModel(data.get("payment").toString(), data.get("date").toString()));
-
-
                 }
+
                 adapter= new CustomAdapter(historyModels,getApplicationContext());
 
 
@@ -260,10 +259,6 @@ public class ContentActivity extends AppCompatActivity {
                                 .setAction("No action", null).show();
                     }
                 });
-
-
-                    //list.add(data.get("payment").toString());
-
 
                 }
                 adapter.notifyDataSetChanged();
