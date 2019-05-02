@@ -18,6 +18,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
@@ -36,16 +37,17 @@ public class ContentActivity extends AppCompatActivity {
 
     TextView freePassLabel;
 
+    Thread timerThread = null;
+
     //private final String NETWORK_INTERFACE_BLUETOOTH = "wlan0";
     private final String NETWORK_INTERFACE_WIFI = "wlan0";
     private final String MAC_ADRESS = "Mac Addresses";
     private final String USERS = "Users";
 
     private final String TEMP_UNIQUE_EMAIL_ADRESS = "temporary@unique.email.com";
-    
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    
-    
+
     ArrayAdapter adapter = null;
     ArrayList<String> list = null;
     
@@ -105,13 +107,17 @@ public class ContentActivity extends AppCompatActivity {
                     Date freePass = documentSnapshot.getTimestamp("freePass").toDate();
                     Date currentTime = Calendar.getInstance().getTime();
 
+                    stopThread();
+
                     if (currentTime.after(freePass)) {
                         // Have not paid
                         freePassLabel.setText("You shall not pass!");
                     }
                     else {
                         // Already paid
-                        updateTimeLeft(currentTime, freePass);
+
+                        startTimerThread(freePass);
+                        //updateTimeLeft(currentTime, freePass);
                     }
 
                     list.clear();
@@ -122,7 +128,43 @@ public class ContentActivity extends AppCompatActivity {
         });
     }
 
-    private void updateTimeLeft(Date currentTime, Date freePass) {
+    public void startTimerThread(final Date freePass) {
+        Thread th = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Date currentTime = Calendar.getInstance().getTime();
+                timerThread = Thread.currentThread();
+
+                Long threadId;
+                do {
+                    threadId = Thread.currentThread().getId();
+
+                    try {
+
+                        final String timeLeft = updateTimeLeft(currentTime, freePass);
+
+
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                freePassLabel.setText(timeLeft);
+
+                            }
+                        });
+                        Thread.sleep(1000);
+                        currentTime = Calendar.getInstance().getTime();
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } while(currentTime.before(freePass) && timerThread != null && timerThread.getId() == threadId);
+            }
+        });
+        th.start();
+    }
+
+    private String updateTimeLeft(Date currentTime, Date freePass) {
         // TODO REFACTOR!
 
         SimpleDateFormat dayPattern = new SimpleDateFormat("dd");
@@ -161,7 +203,6 @@ public class ContentActivity extends AppCompatActivity {
         String currentHour = hourPattern.format(currentTime);
         int hours = Integer.valueOf(untilHour) - Integer.valueOf(currentHour);
         if (!untilDay.equals(currentDay)) {
-            int marginDifference = 1;
             hours = (24 - hours);
         }
         hours -= minutesHasPassed;
@@ -171,7 +212,7 @@ public class ContentActivity extends AppCompatActivity {
 
         String timeLeft = hoursLeft + ":" + minutesLeft + ":" + secondsLeft;
 
-        freePassLabel.setText(timeLeft);
+        return timeLeft;
     }
 
     private void needToPay() {
@@ -180,56 +221,66 @@ public class ContentActivity extends AppCompatActivity {
     
     private void updateHistory() {
         db.collection(USERS).document("testMail").collection("history")
-        .orderBy("date").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        .orderBy("date", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
-                if (documentSnapshots.isEmpty()) {
-                    return;
-                } else {
-                    List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
-                    final ArrayList<HistoryModel> historyModels;
-                    CustomAdapter adapter;
-                    ListView listView;
-                    listView=(ListView)findViewById(R.id.listViewOfStuff);
+            if (documentSnapshots.isEmpty()) {
+                return;
+            } else {
+                List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
+                final ArrayList<HistoryModel> historyModels;
+                CustomAdapter adapter;
+                ListView listView;
+                listView=(ListView)findViewById(R.id.listViewOfStuff);
 
-                    historyModels= new ArrayList<>();
-                    for (int i = 0; i < documents.size(); i++) {
-                        DocumentSnapshot documentSnapshot = documents.get(i);
-                        Map<String, Object> data = documentSnapshot.getData();
-                        historyModels.add(new HistoryModel(data.get("payment").toString(), data.get("date").toString()));
-
-
-                    }
-                    adapter= new CustomAdapter(historyModels,getApplicationContext());
+                historyModels= new ArrayList<>();
+                for (int i = 0; i < documents.size(); i++) {
+                    DocumentSnapshot documentSnapshot = documents.get(i);
+                    Map<String, Object> data = documentSnapshot.getData();
+                    historyModels.add(new HistoryModel(data.get("payment").toString(), data.get("date").toString()));
 
 
-                    listView.setAdapter(adapter);
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                            HistoryModel historyModel= historyModels.get(position);
-
-                            Snackbar.make(view, historyModel.getPayment()+"\n"+historyModel.getDate(), Snackbar.LENGTH_LONG)
-                                    .setAction("No action", null).show();
-                        }
-                    });
-
-
-                        //list.add(data.get("payment").toString());
-
-
-                    }
-                    adapter.notifyDataSetChanged();
                 }
-            });
+                adapter= new CustomAdapter(historyModels,getApplicationContext());
+
+
+                listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        HistoryModel historyModel= historyModels.get(position);
+
+                        Snackbar.make(view, historyModel.getPayment()+"\n"+historyModel.getDate(), Snackbar.LENGTH_LONG)
+                                .setAction("No action", null).show();
+                    }
+                });
+
+
+                    //list.add(data.get("payment").toString());
+
+
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void stopThread() {
+
+        if (timerThread != null) {
+            timerThread.interrupt();
+            timerThread = null;
         }
 
+    }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         // TODO: Unsync user..!
+        stopThread();
+
         finish();
     }
 }
