@@ -1,7 +1,9 @@
 package enal1586.ju.viken_passage.controllers;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -283,5 +285,30 @@ public class ContentActivity extends AppCompatActivity {
         stopThread();
 
         finish();
+    }
+
+// log out button
+
+    public void logoutButtonClicked(View view){
+        new AlertDialog.Builder(this)
+                .setMessage("Do you really want to Logout?")
+                .setPositiveButton(
+                        android.R.string.yes,
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int whichButton){
+
+                                //back to login activity
+                                finish();
+                                System.out.println(whichButton);
+                            }
+                        }
+                ).setNegativeButton(
+                android.R.string.no,
+                new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int whichButton){
+                        // Do not do anything.
+                    }
+                }
+        ).show();
     }
 }

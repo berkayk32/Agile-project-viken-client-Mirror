@@ -11,9 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".controllers.ContentActivity"></activity>
-        <activity android:name=".controllers.AccountActivity" />
         <activity android:name=".controllers.GoogleLogInActivity" />
-        <activity android:name=".controllers.MainActivity">
+        <activity android:name=".controllers.MainActivity"/>
+        <activity android:name=".controllers.AccountActivity" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
