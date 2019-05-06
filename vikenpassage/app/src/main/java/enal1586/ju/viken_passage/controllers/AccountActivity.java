@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -29,7 +31,16 @@ public class AccountActivity extends AppCompatActivity {
     }
     
     public void googleLogIn(View view) {
+        EditText bluetoothText = findViewById(R.id.bluetoothET);
+        if (bluetoothText.getText().toString().equals("")) {
+            Toast.makeText(
+                    this,
+                    "You need to add your bluetooth mac address.",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(this, GoogleLogInActivity.class);
+        intent.putExtra("Mac Address", bluetoothText.getText().toString());
         startActivityForResult(intent, 5);
     }
 

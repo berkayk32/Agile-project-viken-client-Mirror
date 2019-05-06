@@ -45,6 +45,8 @@ public class GoogleLogInActivity extends AppCompatActivity {
     private final String MAC_ADRESS = "Mac Addresses";
     private final String USERS = "Users";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    String macAddress = "";
     
     private GoogleSignInOptions gso;
     private GoogleSignInClient mGoogleSignInClient;
@@ -64,6 +66,13 @@ public class GoogleLogInActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         
         mAuth = FirebaseAuth.getInstance();
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras != null) {
+                macAddress = extras.getString("Mac Address");
+            }
+        }
     }
     
     @Override
@@ -117,12 +126,13 @@ public class GoogleLogInActivity extends AppCompatActivity {
     private void registerUserToMacAddress() {
         Map<String, Object> user = new HashMap<>();
 
-        String macAddr = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
+        //String macAddress = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
+
         String userName = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
         assert userName != null;
         user.put("User Name", userName);
 
-        db.collection(MAC_ADRESS).document(macAddr).set(user)
+        db.collection(MAC_ADRESS).document(macAddress).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
