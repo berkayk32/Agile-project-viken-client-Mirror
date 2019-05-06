@@ -1,4 +1,4 @@
-package enal1586.ju.viken_passage.controllers;
+package enal1586.ju.viken_passage.models;
 
 
 import android.content.Context;

@@ -1,9 +1,11 @@
 package enal1586.ju.viken_passage.controllers;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import java.util.Date;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import enal1586.ju.viken_passage.R;
 import enal1586.ju.viken_passage.models.NetworkUtils;
@@ -66,29 +69,27 @@ public class GoogleLogInActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
-        if (mAuth.getCurrentUser() != null) {
-            signOut();
-            finish();
-        }
-        else {
-            signIn();
-        }
+        signIn();
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void initiateUser() {
         registerUserToMacAddress();
         registerUser();
     }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void registerUser() {
 
-        final String userName = mAuth.getCurrentUser().getEmail();
+        final String userName = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
 
+        assert userName != null;
         DocumentReference docRef = db.collection(USERS).document(userName);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
+                    assert document != null;
                     if (!document.exists()) {
                         createNewUser(userName);
                     }
@@ -112,11 +113,13 @@ public class GoogleLogInActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void registerUserToMacAddress() {
         Map<String, Object> user = new HashMap<>();
 
         String macAddr = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
-        String userName = mAuth.getCurrentUser().getEmail();
+        String userName = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+        assert userName != null;
         user.put("User Name", userName);
 
         db.collection(MAC_ADRESS).document(macAddr).set(user)
@@ -131,16 +134,6 @@ public class GoogleLogInActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-
-    
-    private void signOut() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        Toast.makeText(this,
-                "Successfully logged out: " + currentUser.getEmail(),
-                Toast.LENGTH_SHORT).show();
-        FirebaseAuth.getInstance().signOut();
     }
     
     private void signIn() {
@@ -158,6 +151,7 @@ public class GoogleLogInActivity extends AppCompatActivity {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
+                assert account != null;
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
@@ -173,11 +167,13 @@ public class GoogleLogInActivity extends AppCompatActivity {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
                     FirebaseUser loggedInUser = mAuth.getCurrentUser();
+                    assert loggedInUser != null;
                     Toast.makeText(GoogleLogInActivity.this, "Welcome " + loggedInUser.getEmail(), Toast.LENGTH_SHORT).show();
                     FirebaseUser user = mAuth.getCurrentUser();
                     initiateUser();
@@ -192,11 +188,4 @@ public class GoogleLogInActivity extends AppCompatActivity {
             }
         });
     }
-    
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-    
 }
