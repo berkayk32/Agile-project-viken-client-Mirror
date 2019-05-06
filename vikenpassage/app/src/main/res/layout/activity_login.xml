@@ -42,7 +42,7 @@
             android:textStyle="bold|italic" />
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/bluetoothET"
             android:layout_width="334dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
