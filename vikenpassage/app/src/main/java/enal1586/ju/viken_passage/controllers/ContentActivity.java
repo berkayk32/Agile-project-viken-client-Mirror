@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -48,6 +49,8 @@ public class ContentActivity extends AppCompatActivity {
 
     private final String TEMP_UNIQUE_EMAIL_ADRESS = "temporary@unique.email.com";
 
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     ArrayAdapter adapter = null;
@@ -57,6 +60,10 @@ public class ContentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
+
+        if (mAuth == null) {
+            finish();
+        }
 
         freePassLabel = findViewById(R.id.freePassLabel);
 

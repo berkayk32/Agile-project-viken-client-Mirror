@@ -21,8 +21,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,23 +80,34 @@ public class GoogleLogInActivity extends AppCompatActivity {
         registerUser();
     }
     private void registerUser() {
-        Map<String, Object> user = new HashMap<>();
 
-        String userName = mAuth.getCurrentUser().getEmail();
-        user.put("First Name", "Oskar");
-        user.put("Last Name", "Svensson");
-        user.put("Balance", 500);
+        final String userName = mAuth.getCurrentUser().getEmail();
 
-        db.collection(USERS).document("testMail").set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // TODO: Handle this if it's needed.
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+        DocumentReference docRef = db.collection(USERS).document(userName);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (!document.exists()) {
+                        createNewUser(userName);
+                    }
+                } /*else { } TODO handle if needed */
+            }
+        });
+    }
 
+    private void createNewUser(String userName) {
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("balance", 500);
+        user.put("freePass", Calendar.getInstance().getTime());
+
+        db.collection(USERS).document(userName).set(user)
+        .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // TODO: Handle this if it's needed.
             }
         });
     }
