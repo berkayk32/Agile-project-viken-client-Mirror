@@ -1,7 +1,9 @@
 package enal1586.ju.viken_passage.controllers;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import enal1586.ju.viken_passage.R;
+import enal1586.ju.viken_passage.models.CustomAdapter;
 import enal1586.ju.viken_passage.models.HistoryModel;
 import enal1586.ju.viken_passage.models.NetworkUtils;
 
@@ -61,44 +64,32 @@ public class ContentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
 
-        if (mAuth == null) {
-            finish();
+        if (mAuth.getCurrentUser() == null) {
+            Intent intent = new Intent(this, AccountActivity.class);
+            startActivity(intent);
         }
+        else {
+            TextView userName = findViewById(R.id.userNameTW);
+            userName.setText(mAuth.getCurrentUser().getEmail());
+            freePassLabel = findViewById(R.id.freePassLabel);
 
-        freePassLabel = findViewById(R.id.freePassLabel);
+            list = new ArrayList<>();
+            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
 
-        list = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
+            ListView listView = findViewById(R.id.listViewOfStuff);
+            listView.setAdapter(adapter);
 
-        ListView listView = findViewById(R.id.listViewOfStuff);
-        listView.setAdapter(adapter);
-
-
-        //readData();
-        //registerUser();
-        syncUser();
+            syncUser();
+        }
     }
-    
-    private void registerUser() {
-        // Create a new user with a first and last name
-        Map<String, Object> user = new HashMap<>();
-        
-        String macAddr = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
-        user.put("User Name", TEMP_UNIQUE_EMAIL_ADRESS);
 
-        // Add a new document with a generated ID
-        db.collection(MAC_ADRESS).document(macAddr).set(user)
-        .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(ContentActivity.this, "Success!", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mAuth.getCurrentUser() != null) {
+            TextView userName = findViewById(R.id.userNameTW);
+            userName.setText(mAuth.getCurrentUser().getEmail());
+        }
     }
 
     private void syncUser() {
@@ -228,10 +219,6 @@ public class ContentActivity extends AppCompatActivity {
 
         return timeLeft;
     }
-
-    private void needToPay() {
-        freePassLabel.setText("You have not paid.");
-    }
     
     private void updateHistory() {
         db.collection(USERS).document("testMail").collection("history")
@@ -294,28 +281,25 @@ public class ContentActivity extends AppCompatActivity {
         finish();
     }
 
-// log out button
-
     public void logoutButtonClicked(View view){
         new AlertDialog.Builder(this)
-                .setMessage("Do you really want to Logout?")
-                .setPositiveButton(
-                        android.R.string.yes,
-                        new DialogInterface.OnClickListener(){
-                            public void onClick(DialogInterface dialog, int whichButton){
-
-                                //back to login activity
-                                finish();
-                                System.out.println(whichButton);
-                            }
-                        }
-                ).setNegativeButton(
-                android.R.string.no,
-                new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int whichButton){
-                        // Do not do anything.
-                    }
+        .setMessage("Do you really want to Logout?")
+        .setPositiveButton(
+            android.R.string.yes,
+            new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    FirebaseAuth.getInstance().signOut();
+                    finish();
+                    startActivity(getIntent());
                 }
+            }
+        ).setNegativeButton(
+            android.R.string.no,
+            new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int whichButton){
+                    // Do not do anything.
+                }
+            }
         ).show();
     }
 }
