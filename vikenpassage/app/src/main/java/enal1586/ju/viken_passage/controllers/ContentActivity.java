@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ import enal1586.ju.viken_passage.models.NetworkUtils;
 public class ContentActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 0;
     private static final int REQUEST_DISCOVER_BT = 1;
+    ImageView mBlueIv;
     TextView freePassLabel;
     Switch aSwitch;
     Thread timerThread = null;
@@ -88,7 +90,7 @@ public class ContentActivity extends AppCompatActivity {
             syncUser();
         }
 
-
+        mBlueIv = findViewById(R.id.imageView);
         mBlueAdapter = BluetoothAdapter.getDefaultAdapter();
 
         aSwitch = (Switch) findViewById(R.id.switch1);//Using Swich  to enible or disable bluetooth
@@ -101,6 +103,7 @@ public class ContentActivity extends AppCompatActivity {
                     if (mBlueAdapter == null){
 
                         Toast.makeText(getBaseContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+
                     }
                     else {
                       //enable blutooth
@@ -109,6 +112,7 @@ public class ContentActivity extends AppCompatActivity {
                         // Making Your Device Discoverable
 
                         startActivityForResult(intent, REQUEST_DISCOVER_BT);
+                        mBlueIv.setImageResource(R.drawable.ic_action_on);
                         Toast.makeText(getBaseContext(), "Bluetooth On", Toast.LENGTH_SHORT).show();
                     }
 
@@ -122,6 +126,7 @@ public class ContentActivity extends AppCompatActivity {
                     }
                     else {
                         mBlueAdapter.disable();
+                        mBlueIv.setImageResource(R.drawable.ic_action_off);
 
                         Toast.makeText(getBaseContext(), "Bluetooth Off", Toast.LENGTH_SHORT).show();
                     }
