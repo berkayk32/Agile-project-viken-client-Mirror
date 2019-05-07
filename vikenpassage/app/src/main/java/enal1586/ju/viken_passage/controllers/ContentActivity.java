@@ -1,5 +1,6 @@
 package enal1586.ju.viken_passage.controllers;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -11,7 +12,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,10 +43,13 @@ import enal1586.ju.viken_passage.models.HistoryModel;
 import enal1586.ju.viken_passage.models.NetworkUtils;
 
 public class ContentActivity extends AppCompatActivity {
-
+    private static final int REQUEST_ENABLE_BT = 0;
+    private static final int REQUEST_DISCOVER_BT = 1;
     TextView freePassLabel;
-
+    Switch aSwitch;
     Thread timerThread = null;
+    BluetoothAdapter mBlueAdapter;
+
 
     //private final String NETWORK_INTERFACE_BLUETOOTH = "wlan0";
     private final String NETWORK_INTERFACE_WIFI = "wlan0";
@@ -81,6 +87,54 @@ public class ContentActivity extends AppCompatActivity {
 
             syncUser();
         }
+
+
+        mBlueAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        aSwitch = (Switch) findViewById(R.id.switch1);//Using Swich  to enible or disable bluetooth
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked == true) {
+
+
+                    if (mBlueAdapter == null){
+
+                        Toast.makeText(getBaseContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                      //enable blutooth
+                        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(intent, REQUEST_ENABLE_BT);
+                        // Making Your Device Discoverable
+
+                        startActivityForResult(intent, REQUEST_DISCOVER_BT);
+                        Toast.makeText(getBaseContext(), "Bluetooth On", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                } else {
+
+
+                    if (mBlueAdapter == null){
+
+                        Toast.makeText(getBaseContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        mBlueAdapter.disable();
+
+                        Toast.makeText(getBaseContext(), "Bluetooth Off", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                    }
+
+                }
+
+        });
+
+
+
     }
 
     @Override
