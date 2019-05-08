@@ -82,7 +82,11 @@ public class ContentActivity extends AppCompatActivity {
         }
         else {
             TextView userName = findViewById(R.id.userNameTW);
-            userName.setText(mAuth.getCurrentUser().getEmail());
+            String email = mAuth.getCurrentUser().getEmail();
+            String userNameText = email.substring(0,email.indexOf("@"));
+
+            userName.setText(userNameText);
+
             freePassLabel = findViewById(R.id.freePassLabel);
 
             list = new ArrayList<>();
@@ -189,7 +193,10 @@ public class ContentActivity extends AppCompatActivity {
         super.onStart();
         if (mAuth.getCurrentUser() != null) {
             TextView userName = findViewById(R.id.userNameTW);
-            userName.setText(mAuth.getCurrentUser().getEmail());
+            String email = mAuth.getCurrentUser().getEmail();
+            String userNameText = email.substring(0,email.indexOf("@"));
+
+            userName.setText(userNameText);
         }
     }
 
