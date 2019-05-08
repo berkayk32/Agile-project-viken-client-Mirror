@@ -103,6 +103,7 @@ public class ContentActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     if (mBlueAdapter == null){
+                        aSwitch.setChecked(false);
                         Toast.makeText(getBaseContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
                     }
                     else if (!mBlueAdapter.isEnabled()) {
@@ -112,6 +113,9 @@ public class ContentActivity extends AppCompatActivity {
 
                         startActivityForResult(intent, REQUEST_DISCOVER_BT);
                         mBlueIv.setImageResource(R.drawable.ic_action_on);
+
+                        String addr = mBlueAdapter.getAddress();
+                        Toast.makeText(ContentActivity.this, "The address is: " + addr, Toast.LENGTH_SHORT).show();
 
                         //Making Your Device Discoverable
                         Toast.makeText(getBaseContext(), "Bluetooth On", Toast.LENGTH_SHORT).show();
@@ -131,7 +135,8 @@ public class ContentActivity extends AppCompatActivity {
 
 
                     if (mBlueAdapter == null){
-                        Toast.makeText(getBaseContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+                        aSwitch.setChecked(false);
+                        Toast.makeText(getBaseContext(), "Bluetooth is not available...", Toast.LENGTH_SHORT).show();
                     }
                     else if (mBlueAdapter.isEnabled()){
                         mBlueAdapter.disable();
@@ -143,8 +148,6 @@ public class ContentActivity extends AppCompatActivity {
                         mBlueIv.setImageResource(R.drawable.ic_action_off);
                         Toast.makeText(getBaseContext(), "Bluetooth is already off", Toast.LENGTH_SHORT).show();
                     }
-
-
                 }
 
             }
@@ -160,18 +163,16 @@ public class ContentActivity extends AppCompatActivity {
             if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
 
-                final Switch btSwitch = findViewById(R.id.bluetoothSwitch);
-
                 switch(state) {
                     case BluetoothAdapter.STATE_OFF:
                         mBlueIv.setImageResource(R.drawable.ic_action_off);
-                        btSwitch.setChecked(false);
+                        aSwitch.setChecked(false);
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
                         break;
                     case BluetoothAdapter.STATE_ON:
                         mBlueIv.setImageResource(R.drawable.ic_action_on);
-                        btSwitch.setChecked(true);
+                        aSwitch.setChecked(true);
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:
                         break;
@@ -180,9 +181,6 @@ public class ContentActivity extends AppCompatActivity {
             }
         }
     };
-    
-    
-    
 
     @Override
     protected void onStart() {
@@ -195,7 +193,7 @@ public class ContentActivity extends AppCompatActivity {
 
     private void syncUser() {
 
-        DocumentReference contactListener = db.collection(USERS).document("testMail");
+        DocumentReference contactListener = db.collection(USERS).document(mAuth.getCurrentUser().getEmail());
 
         contactListener.addSnapshotListener(new EventListener< DocumentSnapshot >() {
             @Override
@@ -322,7 +320,7 @@ public class ContentActivity extends AppCompatActivity {
     }
     
     private void updateHistory() {
-        db.collection(USERS).document("testMail").collection("history")
+        db.collection(USERS).document(mAuth.getCurrentUser().getEmail()).collection("history")
         .orderBy("date", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
