@@ -67,4 +67,5 @@ public class AccountActivity extends AppCompatActivity {
         //TODO add timer and ask if user wants to exite program
 
     }
+
 }

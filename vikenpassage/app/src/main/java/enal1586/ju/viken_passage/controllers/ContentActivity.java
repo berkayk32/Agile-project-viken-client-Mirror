@@ -3,6 +3,7 @@ package enal1586.ju.viken_passage.controllers;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -105,17 +106,28 @@ public class ContentActivity extends AppCompatActivity {
                         Toast.makeText(getBaseContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
 
                     }
+                    else if (!mBlueAdapter.isEnabled()) {
+                        {
+                            //enable blutooth
+                            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(intent, REQUEST_ENABLE_BT);
+                            // Making Your Device Discoverable
+
+                            startActivityForResult(intent, REQUEST_DISCOVER_BT);
+                            mBlueIv.setImageResource(R.drawable.ic_action_on);
+                            //Making Your Device Discoverable
+                            Toast.makeText(getBaseContext(), "Bluetooth On", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                     else {
-                      //enable blutooth
                         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(intent, REQUEST_ENABLE_BT);
+
                         // Making Your Device Discoverable
 
                         startActivityForResult(intent, REQUEST_DISCOVER_BT);
                         mBlueIv.setImageResource(R.drawable.ic_action_on);
-                        Toast.makeText(getBaseContext(), "Bluetooth On", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), "Bluetooth is already on", Toast.LENGTH_SHORT).show();
                     }
-
 
                 } else {
 
@@ -124,11 +136,16 @@ public class ContentActivity extends AppCompatActivity {
 
                         Toast.makeText(getBaseContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
                     }
-                    else {
+                    else if (mBlueAdapter.isEnabled()){
                         mBlueAdapter.disable();
                         mBlueIv.setImageResource(R.drawable.ic_action_off);
 
                         Toast.makeText(getBaseContext(), "Bluetooth Off", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        mBlueIv.setImageResource(R.drawable.ic_action_off);
+                        Toast.makeText(getBaseContext(), "Bluetooth is already off", Toast.LENGTH_SHORT).show();
+
                     }
 
 
@@ -361,4 +378,6 @@ public class ContentActivity extends AppCompatActivity {
             }
         ).show();
     }
+
+
 }
