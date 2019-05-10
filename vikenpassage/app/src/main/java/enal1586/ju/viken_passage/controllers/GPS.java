@@ -19,8 +19,8 @@ import enal1586.ju.viken_passage.R;
 
 public class GPS extends AppCompatActivity {
     String names[] = {"Taj mahal","Eiffel Tower","Burj khalifa","Jönköping"};
-    Double latitude[] = {27.1750,48.8584,25.1972,57.7783};
-    Double longitude[] = {78.0422,2.2945,55.2744,14.3766};
+    Double latitude[] = {27.1750,48.8584,25.1972,57.777942};
+    Double longitude[] = {78.0422,2.2945,55.2744,14.158095};
     private TextView textView, tvCountry, tvCity, tvState, tvPincode, tvFeature;
     private Spinner spinner;
 

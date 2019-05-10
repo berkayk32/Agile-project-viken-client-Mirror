@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -346,9 +347,15 @@ public class ContentActivity extends AppCompatActivity {
                     Map<String, Object> data = documentSnapshot.getData();
 
                     historyModels.add(new HistoryModel(data.get("payment").toString(), documentSnapshot.getTimestamp("date").toDate().toString()));
+                    GeoPoint position = documentSnapshot.getGeoPoint("position");
+                    if (position != null) {
+                        position.getLatitude();
+                        position.getLongitude();
+                    }
                 }
 
                 adapter= new CustomAdapter(historyModels,getApplicationContext());
+
 
 
                 listView.setAdapter(adapter);
