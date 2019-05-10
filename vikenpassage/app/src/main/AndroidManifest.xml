@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".controllers.Notifications"
@@ -13,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".controllers.GPS"></activity>
         <activity android:name=".controllers.GoogleLogInActivity" />
         <activity android:name=".controllers.AccountActivity" />
         <activity android:name=".controllers.ContentActivity">

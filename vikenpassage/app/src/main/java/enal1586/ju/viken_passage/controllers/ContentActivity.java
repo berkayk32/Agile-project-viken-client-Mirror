@@ -409,5 +409,9 @@ public class ContentActivity extends AppCompatActivity {
         ).show();
     }
 
+public void GPSButtonClicked(View view){
+    Intent gps = new Intent(this, GPS.class);
+    startActivity(gps);
 
+}
 }
