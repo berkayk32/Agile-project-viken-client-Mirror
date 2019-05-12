@@ -29,6 +29,7 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
     }
+
     
     public void googleLogIn(View view) {
         EditText bluetoothText = findViewById(R.id.bluetoothET);

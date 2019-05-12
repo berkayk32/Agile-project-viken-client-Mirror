@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -26,6 +27,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -112,7 +115,7 @@ public class GoogleLogInActivity extends AppCompatActivity {
         Map<String, Object> user = new HashMap<>();
         user.put("balance", 500);
         user.put("freePass", Calendar.getInstance().getTime());
-
+        user.put("deviceToken", FirebaseInstanceId.getInstance().getToken());
         db.collection(USERS).document(userName).set(user)
         .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -187,6 +190,7 @@ public class GoogleLogInActivity extends AppCompatActivity {
                     Toast.makeText(GoogleLogInActivity.this, "Welcome " + loggedInUser.getEmail(), Toast.LENGTH_SHORT).show();
                     FirebaseUser user = mAuth.getCurrentUser();
                     initiateUser();
+                    firebaseInstanceId();
                     finish();
                 } else {
                     // If sign in fails, display a message to the user.
@@ -197,5 +201,21 @@ public class GoogleLogInActivity extends AppCompatActivity {
                 // ...
             }
         });
+    }
+    private void firebaseInstanceId(){
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        Log.d("DATA", token);
+                        Toast.makeText(GoogleLogInActivity.this, token, Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }
