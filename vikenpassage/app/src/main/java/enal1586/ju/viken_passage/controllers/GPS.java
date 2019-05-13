@@ -12,6 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.firebase.firestore.GeoPoint;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -57,9 +60,9 @@ public class GPS extends AppCompatActivity {
     private void setTexts(int position){
 
         Geocoder geocoder;
-        List<Address> addresses = null;
         geocoder = new Geocoder(this, Locale.getDefault());
 
+        List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocation(latitude[position], longitude[position], 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
         } catch (IOException e) {
