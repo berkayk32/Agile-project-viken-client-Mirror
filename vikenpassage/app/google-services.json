@@ -15,30 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "955389676443-7uj8ajcb736kec6jc9j2rq7sajfh0kup.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "enal1586.ju.viken_passage",
-            "certificate_hash": "910cbc4a50fe035f43b25c006228c737ab066db2"
-          }
-        },
-        {
-          "client_id": "955389676443-fm24q2j4qvgfaaef77alqidi18oldvsj.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "enal1586.ju.viken_passage",
-            "certificate_hash": "5c23964bb4cdea9d9620ae1aeb1af50fd34eb5d5"
-          }
-        },
-        {
-          "client_id": "955389676443-f1vmv6mh5093591tai3119sv7h78ngmv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "enal1586.ju.viken_passage",
-            "certificate_hash": "f5495f2971c025d63ceda167e1d6476b963dbefe"
-          }
-        },
-        {
           "client_id": "955389676443-rohtbp80buloov756cq2pt1508ald09m.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -57,13 +33,20 @@
         }
       ],
       "services": {
+        "analytics_service": {
+          "status": 1
+        },
         "appinvite_service": {
+          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "955389676443-16mamkcda88akoh793q883ldjsvkb366.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
+        },
+        "ads_service": {
+          "status": 2
         }
       }
     }

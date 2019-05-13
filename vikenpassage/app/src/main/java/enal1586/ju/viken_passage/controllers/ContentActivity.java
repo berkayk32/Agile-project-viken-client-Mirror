@@ -1,15 +1,16 @@
 package enal1586.ju.viken_passage.controllers;
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,7 +31,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,13 +43,12 @@ import java.util.Map;
 import enal1586.ju.viken_passage.R;
 import enal1586.ju.viken_passage.models.CustomAdapter;
 import enal1586.ju.viken_passage.models.HistoryModel;
-import enal1586.ju.viken_passage.models.NetworkUtils;
 
 public class ContentActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 0;
     private static final int REQUEST_DISCOVER_BT = 1;
     ImageView mBlueIv;
-    TextView freePassLabel;
+    private final String MAC_ADRESS = "MacAddresses";
     Switch aSwitch;
     Thread timerThread = null;
     BluetoothAdapter mBlueAdapter;
@@ -54,18 +56,17 @@ public class ContentActivity extends AppCompatActivity {
 
     //private final String NETWORK_INTERFACE_BLUETOOTH = "wlan0";
     private final String NETWORK_INTERFACE_WIFI = "wlan0";
-    private final String MAC_ADRESS = "Mac Addresses";
+    TextView expiryDateLabel;
     private final String USERS = "Users";
 
     private final String TEMP_UNIQUE_EMAIL_ADRESS = "temporary@unique.email.com";
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     ArrayAdapter adapter = null;
     ArrayList<String> list = null;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +78,7 @@ public class ContentActivity extends AppCompatActivity {
         // Code for bluetooth detection via broadcast
 
         if (mAuth.getCurrentUser() == null) {
-            Intent intent = new Intent(this, AccountActivity.class);
+            Intent intent = new Intent(this, LogInActivity.class);
             startActivity(intent);
         }
         else {
@@ -87,7 +88,7 @@ public class ContentActivity extends AppCompatActivity {
 
             userName.setText(userNameText);
 
-            freePassLabel = findViewById(R.id.freePassLabel);
+            expiryDateLabel = findViewById(R.id.freePassLabel);
 
             list = new ArrayList<>();
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
@@ -200,7 +201,7 @@ public class ContentActivity extends AppCompatActivity {
 
     private void syncUser() {
 
-        DocumentReference contactListener = db.collection(USERS).document(mAuth.getCurrentUser().getEmail());
+        final DocumentReference contactListener = db.collection(USERS).document(mAuth.getCurrentUser().getEmail());
 
         contactListener.addSnapshotListener(new EventListener< DocumentSnapshot >() {
             @Override
@@ -210,14 +211,14 @@ public class ContentActivity extends AppCompatActivity {
                     return;
                 }
                 if (documentSnapshot != null && documentSnapshot.exists()) {
-                    Date freePass = documentSnapshot.getTimestamp("freePass").toDate();
+                    Date freePass = documentSnapshot.getTimestamp("expiryDate").toDate();
                     Date currentTime = Calendar.getInstance().getTime();
 
                     stopThread();
 
                     if (currentTime.after(freePass)) {
                         // Have not paid
-                        freePassLabel.setText("You shall not pass!");
+                        expiryDateLabel.setText("You shall not pass!");
                     }
                     else {
                         // Already paid
@@ -227,28 +228,30 @@ public class ContentActivity extends AppCompatActivity {
                     }
 
                     list.clear();
-                    updateHistory();
+                    updateUserHistory();
 
                 }
             }
         });
     }
 
-    public void startTimerThread(final Date freePass) {
+    @TargetApi(26)
+    public void startTimerThread(final Date expiryDate) {
         Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
                 Date currentTime = Calendar.getInstance().getTime();
                 timerThread = Thread.currentThread();
-
                 do {
                     try {
-                        final String timeLeft = updateTimeLeft(currentTime, freePass);
+                        LocalDateTime localDateTimeCurrent = LocalDateTime.ofInstant(currentTime.toInstant(), ZoneId.systemDefault());
+                        LocalDateTime localDateTimeExpiryDate = LocalDateTime.ofInstant(expiryDate.toInstant(), ZoneId.systemDefault());
+                        final String timeLeft = updateTimeLeft(localDateTimeCurrent, localDateTimeExpiryDate);
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                freePassLabel.setText(timeLeft);
+                                expiryDateLabel.setText(timeLeft);
 
                             }
                         });
@@ -259,13 +262,13 @@ public class ContentActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                } while(currentTime.before(freePass) && timerThread != null && timerThread == Thread.currentThread());
+                } while (currentTime.before(expiryDate) && timerThread != null && timerThread == Thread.currentThread());
 
                 if (timerThread != null) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            freePassLabel.setText("You shall not pass!");
+                            expiryDateLabel.setText("You shall not pass!");
                         }
                     });
                 }
@@ -275,93 +278,45 @@ public class ContentActivity extends AppCompatActivity {
         th.start();
     }
 
-    private String updateTimeLeft(Date currentTime, Date freePass) {
-        // TODO REFACTOR!
-
-        SimpleDateFormat dayPattern = new SimpleDateFormat("dd");
-        String untilDay = dayPattern.format(freePass);
-        String currentDay = dayPattern.format(currentTime);
-
-        SimpleDateFormat secondPattern = new SimpleDateFormat("ss");
-        String untilSecond = secondPattern.format(freePass);
-        String currentSecond = secondPattern.format(currentTime);
-        int seconds = Integer.valueOf(untilSecond) - Integer.valueOf(currentSecond);
-        int secondsHasPassed = 0;
-        if (seconds < 0) {
-            secondsHasPassed = 1;
-            seconds = seconds + 60;
-        }
-        String secondsLeft = seconds < 10 ? "0" + seconds : String.valueOf(seconds);
-
-        SimpleDateFormat minutePattern = new SimpleDateFormat("mm");
-        String untilMinute = minutePattern.format(freePass);
-        String currentMinute = minutePattern.format(currentTime);
-        int minutes = Integer.valueOf(untilMinute) - Integer.valueOf(currentMinute);
-        int minutesHasPassed = 0;
-        if (minutes < 0) {
-            minutesHasPassed = 1;
-            minutes = minutes + 60;
-        }
-        minutes -= secondsHasPassed;
-        if (minutes < 0) {
-            minutesHasPassed = 1;
-            minutes = 59;
-        }
-        String minutesLeft = minutes < 10 ? ("0" + (minutes)) : String.valueOf(minutes);
-
-        SimpleDateFormat hourPattern = new SimpleDateFormat("HH");
-        String untilHour = hourPattern.format(freePass);
-        String currentHour = hourPattern.format(currentTime);
-        int hours = Integer.valueOf(untilHour) - Integer.valueOf(currentHour);
-        if (!untilDay.equals(currentDay)) {
-            hours = (24 - hours);
-        }
-        hours -= minutesHasPassed;
-        String hoursLeft = hours < 10 ? "0" + hours : String.valueOf(hours);
-
-
-
-        String timeLeft = hoursLeft + ":" + minutesLeft + ":" + secondsLeft;
-
-        return timeLeft;
+    @TargetApi(26)
+    private String updateTimeLeft(LocalDateTime currentTime, LocalDateTime freePass) {
+        Duration duration = Duration.between(currentTime, freePass);
+        return duration.toHours() + ":" + duration.toMinutes() + ":" + duration.getSeconds();
     }
-    
-    private void updateHistory() {
+
+    private void updateUserHistory() {
         db.collection(USERS).document(mAuth.getCurrentUser().getEmail()).collection("history")
-        .orderBy("date", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .orderBy("date", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
-            if (documentSnapshots.isEmpty()) {
-                return;
-            } else {
-                List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
-                final ArrayList<HistoryModel> historyModels;
-                CustomAdapter adapter;
-                ListView listView;
-                listView=(ListView)findViewById(R.id.listViewOfStuff);
+                if (documentSnapshots.isEmpty()) {
+                    return;
+                } else {
+                    List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
+                    final ArrayList<HistoryModel> historyModels;
+                    CustomAdapter customHistoryAdapter;
+                    ListView listView;
+                    listView = (ListView) findViewById(R.id.listViewOfStuff);
 
-                historyModels= new ArrayList<>();
-                for (int i = 0; i < documents.size(); i++) {
-                    DocumentSnapshot documentSnapshot = documents.get(i);
-                    Map<String, Object> data = documentSnapshot.getData();
-
-                    historyModels.add(new HistoryModel(data.get("payment").toString(), documentSnapshot.getTimestamp("date").toDate().toString()));
-                }
-
-                adapter= new CustomAdapter(historyModels,getApplicationContext());
-
-
-                listView.setAdapter(adapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                        HistoryModel historyModel= historyModels.get(position);
-
-                        Snackbar.make(view, historyModel.getPayment()+"\n"+historyModel.getDate(), Snackbar.LENGTH_LONG)
-                                .setAction("No action", null).show();
+                    historyModels = new ArrayList<>();
+                    for (int i = 0; i < documents.size(); i++) {
+                        DocumentSnapshot documentSnapshot = documents.get(i);
+                        Map<String, Object> data = documentSnapshot.getData();
+                        historyModels.add(new HistoryModel(documentSnapshot.getTimestamp("date").toDate(), data.get("payment").toString()));
                     }
-                });
+
+                    customHistoryAdapter = new CustomAdapter(historyModels, getApplicationContext());
+                    listView.setAdapter(customHistoryAdapter);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                            HistoryModel historyModel = historyModels.get(position);
+
+                            Snackbar.make(view, historyModel.getPayment() + "\n" + historyModel.getDate(), Snackbar.LENGTH_LONG)
+                                    .setAction("No action", null).show();
+                        }
+                    });
 
                 }
                 adapter.notifyDataSetChanged();
@@ -389,23 +344,23 @@ public class ContentActivity extends AppCompatActivity {
 
     public void logoutButtonClicked(View view){
         new AlertDialog.Builder(this)
-        .setMessage("Do you really want to Logout?")
-        .setPositiveButton(
-            android.R.string.yes,
-            new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    FirebaseAuth.getInstance().signOut();
-                    finish();
-                    startActivity(getIntent());
+                .setMessage("Do you really want to Logout?")
+                .setPositiveButton(
+                        android.R.string.yes,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                FirebaseAuth.getInstance().signOut();
+                                finish();
+                                startActivity(getIntent());
+                            }
+                        }
+                ).setNegativeButton(
+                android.R.string.no,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do not do anything.
+                    }
                 }
-            }
-        ).setNegativeButton(
-            android.R.string.no,
-            new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int whichButton){
-                    // Do not do anything.
-                }
-            }
         ).show();
     }
 

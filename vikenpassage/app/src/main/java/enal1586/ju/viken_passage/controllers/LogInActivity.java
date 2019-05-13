@@ -1,10 +1,10 @@
 package enal1586.ju.viken_passage.controllers;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,15 +13,15 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import enal1586.ju.viken_passage.R;
 
-public class AccountActivity extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        
+
         findViewById(R.id.btnLogInGoogle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -29,7 +29,7 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
     }
-    
+
     public void googleLogIn(View view) {
         EditText bluetoothText = findViewById(R.id.bluetoothET);
         if (bluetoothText.getText().toString().equals("")) {
@@ -40,7 +40,7 @@ public class AccountActivity extends AppCompatActivity {
             return;
         }
         Intent intent = new Intent(this, GoogleLogInActivity.class);
-        intent.putExtra("Mac Address", bluetoothText.getText().toString());
+        intent.putExtra("MACADDRESS", bluetoothText.getText().toString());
         startActivityForResult(intent, 5);
     }
 
@@ -54,7 +54,7 @@ public class AccountActivity extends AppCompatActivity {
         }
     }
 
-//settings button
+    //settings button
     public void SettingsButtonClicked(View view){
         Intent dialogIntent = new Intent(Settings.ACTION_DEVICE_INFO_SETTINGS);
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
