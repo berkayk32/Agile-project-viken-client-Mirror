@@ -7,11 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-<<<<<<< HEAD
 import android.util.Log;
 import android.widget.Toast;
-=======
->>>>>>> refactorBranch
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -31,10 +28,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
-<<<<<<< HEAD
 import com.google.firebase.iid.InstanceIdResult;
-=======
->>>>>>> refactorBranch
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -116,18 +110,7 @@ public class GoogleLogInActivity extends AppCompatActivity {
 
         Map<String, Object> user = new HashMap<>();
         user.put("balance", 500);
-<<<<<<< HEAD
         user.put("freePass", Calendar.getInstance().getTime());
-        user.put("deviceToken", FirebaseInstanceId.getInstance().getToken());
-        db.collection(USERS).document(userName).set(user)
-        .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // TODO: Handle this if it's needed.
-            }
-        });
-=======
-        user.put("expiryDate", Calendar.getInstance().getTime());
         user.put("deviceToken", FirebaseInstanceId.getInstance().getToken());
         databaseInstance.collection(USERS).document(userEmail).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -136,7 +119,6 @@ public class GoogleLogInActivity extends AppCompatActivity {
                         // TODO: Handle this if it's needed.
                     }
                 });
->>>>>>> refactorBranch
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -187,30 +169,6 @@ public class GoogleLogInActivity extends AppCompatActivity {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-<<<<<<< HEAD
-        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    FirebaseUser loggedInUser = mAuth.getCurrentUser();
-                    assert loggedInUser != null;
-                    Toast.makeText(GoogleLogInActivity.this, "Welcome " + loggedInUser.getEmail(), Toast.LENGTH_SHORT).show();
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    initiateUser();
-                    firebaseInstanceId();
-                    finish();
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(GoogleLogInActivity.this,
-                            "Authentication Failed.",
-                            Toast.LENGTH_SHORT).show();
-                }
-                // ...
-            }
-        });
-=======
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
@@ -232,7 +190,6 @@ public class GoogleLogInActivity extends AppCompatActivity {
                         // ...
                     }
                 });
->>>>>>> refactorBranch
     }
     private void firebaseInstanceId(){
         FirebaseInstanceId.getInstance().getInstanceId()

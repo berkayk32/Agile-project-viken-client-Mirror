@@ -30,10 +30,6 @@ public class LogInActivity extends AppCompatActivity {
         });
     }
 
-<<<<<<< HEAD:vikenpassage/app/src/main/java/enal1586/ju/viken_passage/controllers/AccountActivity.java
-    
-=======
->>>>>>> refactorBranch:vikenpassage/app/src/main/java/enal1586/ju/viken_passage/controllers/LogInActivity.java
     public void googleLogIn(View view) {
         EditText bluetoothText = findViewById(R.id.bluetoothET);
         if (bluetoothText.getText().toString().equals("")) {

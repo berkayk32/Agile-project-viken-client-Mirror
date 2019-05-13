@@ -28,7 +28,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -290,38 +289,7 @@ public class ContentActivity extends AppCompatActivity {
                 .orderBy("date", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
-<<<<<<< HEAD
-            if (documentSnapshots.isEmpty()) {
-                return;
-            } else {
-                List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
-                final ArrayList<HistoryModel> historyModels;
-                CustomAdapter adapter;
-                ListView listView;
-                listView=(ListView)findViewById(R.id.listViewOfStuff);
 
-                historyModels= new ArrayList<>();
-                for (int i = 0; i < documents.size(); i++) {
-                    DocumentSnapshot documentSnapshot = documents.get(i);
-                    Map<String, Object> data = documentSnapshot.getData();
-
-                    historyModels.add(new HistoryModel(data.get("payment").toString(), documentSnapshot.getTimestamp("date").toDate().toString()));
-                    GeoPoint position = documentSnapshot.getGeoPoint("position");
-                    if (position != null) {
-                        position.getLatitude();
-                        position.getLongitude();
-                    }
-                }
-
-                adapter= new CustomAdapter(historyModels,getApplicationContext());
-
-
-
-                listView.setAdapter(adapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-=======
                 if (documentSnapshots.isEmpty()) {
                     return;
                 } else {
@@ -343,7 +311,6 @@ public class ContentActivity extends AppCompatActivity {
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
->>>>>>> refactorBranch
 
                             HistoryModel historyModel = historyModels.get(position);
 
