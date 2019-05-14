@@ -281,20 +281,7 @@ public class ContentActivity extends AppCompatActivity {
     @TargetApi(26)
     private String updateTimeLeft(LocalDateTime currentTime, LocalDateTime freePass) {
         Duration duration = Duration.between(currentTime, freePass);
-        long seconds = duration.getSeconds() % 60;
-        String stringSeconds = seconds < 10 ? "0" + seconds : "" + seconds;
-
-        long minutes = duration.toMinutes() % 60;
-        String stringMinutes = minutes < 10 ? "0" + minutes : "" +  minutes;
-
-        long hours = duration.toHours();
-        String stringHours = hours < 10 ? "0" + hours : "" + hours;
-
-        if (hours > 23) {
-            return freePass.toString();
-        }
-
-        return stringHours + ":" + stringMinutes + ":" + stringSeconds;
+        return duration.toHours() + ":" + duration.toMinutes() + ":" + duration.getSeconds();
     }
 
     private void updateUserHistory() {
