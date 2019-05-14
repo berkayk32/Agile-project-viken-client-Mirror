@@ -1,23 +1,25 @@
 package enal1586.ju.viken_passage.models;
 
-    public class HistoryModel {
+import java.util.Date;
 
-        String payment;
-        String date;
+public class HistoryModel {
 
-        public HistoryModel (String Payment, String Date) {
-            this.payment=Payment;
-            this.date=Date;
+    String _payment;
+    Date _date;
 
-        }
+    public HistoryModel(Date Date, String Payment) {
+        this._payment = Payment;
+        this._date = Date;
 
-        public String getPayment() {
-            return payment;
-        }
+    }
 
-        public String getDate() {
-            return date;
-        }
+    public String getPayment() {
+        return _payment;
+    }
+
+    public Date getDate() {
+        return _date;
+    }
 
 }
 
