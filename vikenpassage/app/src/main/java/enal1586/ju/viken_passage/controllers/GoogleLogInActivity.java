@@ -124,9 +124,15 @@ public class GoogleLogInActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void registerUserToMacAddress(@NonNull String userEmail) {
         //String macAddress = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
+        Map<String, Object> user = new HashMap<>();
+        String userName = mAuth.getCurrentUser().getEmail();
+        assert userName != null;
+        user.put("User Email", userEmail);
+
+
         userEmail = mAuth.getCurrentUser().getEmail();
 
-        databaseInstance.collection(MAC_ADRESS).document(macAddress).set(userEmail)
+        databaseInstance.collection(MAC_ADRESS).document(macAddress).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

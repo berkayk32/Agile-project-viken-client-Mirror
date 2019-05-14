@@ -20,6 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <activity android:name=".controllers.LogInActivity"/>
+
         <activity android:name=".controllers.GPS" />
         <activity android:name=".controllers.GoogleLogInActivity" />
         <activity android:name=".controllers.AccountActivity" />

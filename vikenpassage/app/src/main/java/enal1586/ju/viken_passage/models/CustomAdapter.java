@@ -19,6 +19,7 @@ public class CustomAdapter extends ArrayAdapter<HistoryModel> implements View.On
 
     private ArrayList<HistoryModel> historyDataSet;
     Context mContext;
+
     private int lastPosition = -1;
 
     public CustomAdapter(ArrayList<HistoryModel> historyData, Context context) {
@@ -55,6 +56,8 @@ public class CustomAdapter extends ArrayAdapter<HistoryModel> implements View.On
             viewHolder.textPayment = (TextView) convertView.findViewById(R.id.Payment);
             viewHolder.textDate = (TextView) convertView.findViewById(R.id.Timestamp);
 
+            viewHolder.textLocation = (TextView) convertView.findViewById(R.id.Location);
+
             result = convertView;
 
             convertView.setTag(viewHolder);
@@ -63,12 +66,11 @@ public class CustomAdapter extends ArrayAdapter<HistoryModel> implements View.On
             result = convertView;
         }
 
-        //Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        //result.startAnimation(animation);
         lastPosition = position;
 
         viewHolder.textPayment.setText(historyModel.getPayment());
         viewHolder.textDate.setText(historyModel.getDate().toString());
+        viewHolder.textLocation.setText(historyModel.getGeopoint().toString());
         // Return the completed view to render on screen
         return convertView;
     }
@@ -77,5 +79,6 @@ public class CustomAdapter extends ArrayAdapter<HistoryModel> implements View.On
     private static class ViewHolder {
         TextView textPayment;
         TextView textDate;
+        TextView textLocation;
     }
 }

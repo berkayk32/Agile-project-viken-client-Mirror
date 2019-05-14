@@ -210,7 +210,7 @@ public class ContentActivity extends AppCompatActivity {
                     Toast.makeText(ContentActivity.this, "Something went wrong when trying to sync user data.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (documentSnapshot != null && documentSnapshot.exists()) {
+                if (documentSnapshot != null && documentSnapshot.exists() && documentSnapshot.getTimestamp("expiryDate") != null) {
                     Date freePass = documentSnapshot.getTimestamp("expiryDate").toDate();
                     Date currentTime = Calendar.getInstance().getTime();
 
@@ -316,21 +316,12 @@ public class ContentActivity extends AppCompatActivity {
                     for (int i = 0; i < documents.size(); i++) {
                         DocumentSnapshot documentSnapshot = documents.get(i);
                         Map<String, Object> data = documentSnapshot.getData();
-                        historyModels.add(new HistoryModel(documentSnapshot.getTimestamp("date").toDate(), data.get("payment").toString()));
+                        historyModels.add(new HistoryModel(documentSnapshot.getTimestamp("date").toDate(), data.get("payment").toString(),documentSnapshot.getGeoPoint("position")));
                     }
 
                     customHistoryAdapter = new CustomAdapter(historyModels, getApplicationContext());
                     listView.setAdapter(customHistoryAdapter);
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                            HistoryModel historyModel = historyModels.get(position);
-
-                            Snackbar.make(view, historyModel.getPayment() + "\n" + historyModel.getDate(), Snackbar.LENGTH_LONG)
-                                    .setAction("No action", null).show();
-                        }
-                    });
 
                 }
                 adapter.notifyDataSetChanged();
