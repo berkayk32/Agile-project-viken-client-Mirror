@@ -110,7 +110,7 @@ public class GoogleLogInActivity extends AppCompatActivity {
 
         Map<String, Object> user = new HashMap<>();
         user.put("balance", 500);
-        user.put("freePass", Calendar.getInstance().getTime());
+        user.put("expiryDate", Calendar.getInstance().getTime());
         user.put("deviceToken", FirebaseInstanceId.getInstance().getToken());
         databaseInstance.collection(USERS).document(userEmail).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
