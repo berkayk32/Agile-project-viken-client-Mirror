@@ -2,13 +2,18 @@ package enal1586.ju.viken_passage.models;
 
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import enal1586.ju.viken_passage.R;
 
@@ -68,9 +73,21 @@ public class CustomAdapter extends ArrayAdapter<HistoryModel> implements View.On
 
         lastPosition = position;
 
+        Geocoder geocoder;
+        geocoder = new Geocoder(getContext());
+
+        List<Address> location = null;
+
+        try {
+             location  = geocoder.getFromLocation(historyModel.getGeopoint().getLatitude(), historyModel.getGeopoint().getLongitude(),1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         viewHolder.textPayment.setText(historyModel.getPayment());
         viewHolder.textDate.setText(historyModel.getDate().toString());
-        viewHolder.textLocation.setText(historyModel.getGeopoint().toString());
+        viewHolder.textLocation.setText(location.get(0).getAddressLine(0));
         // Return the completed view to render on screen
         return convertView;
     }
