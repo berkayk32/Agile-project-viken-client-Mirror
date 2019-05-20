@@ -1,16 +1,14 @@
 package enal1586.ju.viken_passage.models;
 
-import android.location.Geocoder;
-
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Date;
 
 public class HistoryModel {
 
-    String _payment;
-    Date _date;
-    GeoPoint _geopoint;
+    private String _payment;
+    private Date _date;
+    private GeoPoint _geopoint;
 
     public HistoryModel(Date Date, String Payment,GeoPoint geoPoint) {
         this._payment = Payment;

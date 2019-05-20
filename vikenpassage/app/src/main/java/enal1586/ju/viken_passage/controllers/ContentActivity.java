@@ -8,11 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -48,18 +46,12 @@ public class ContentActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 0;
     private static final int REQUEST_DISCOVER_BT = 1;
     ImageView mBlueIv;
-    private final String MAC_ADRESS = "MacAddresses";
     Switch aSwitch;
     Thread timerThread = null;
     BluetoothAdapter mBlueAdapter;
 
-
-    //private final String NETWORK_INTERFACE_BLUETOOTH = "wlan0";
-    private final String NETWORK_INTERFACE_WIFI = "wlan0";
     TextView expiryDateLabel;
     private final String USERS = "Users";
-
-    private final String TEMP_UNIQUE_EMAIL_ADRESS = "temporary@unique.email.com";
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();

@@ -41,10 +41,7 @@ import static android.widget.Toast.makeText;
 
 public class GoogleLogInActivity extends AppCompatActivity {
 
-    public static String LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
-
-    private final String NETWORK_INTERFACE_WIFI = "wlan0";
-    private final String MAC_ADRESS = "MACAddresses";
+    private final String MAC_ADRESS = "Mac Addresses";
     private final String USERS = "Users";
     private FirebaseFirestore databaseInstance = FirebaseFirestore.getInstance();
 
@@ -123,7 +120,6 @@ public class GoogleLogInActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void registerUserToMacAddress(@NonNull String userEmail) {
-        //String macAddress = NetworkUtils.getMACAddress(NETWORK_INTERFACE_WIFI);
         Map<String, Object> user = new HashMap<>();
         user.put("User Email", userEmail);
 
@@ -189,22 +185,6 @@ public class GoogleLogInActivity extends AppCompatActivity {
                                     LENGTH_SHORT).show();
                         }
                         // ...
-                    }
-                });
-    }
-    private void firebaseInstanceId(){
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-                        Log.d("DATA", token);
-                        Toast.makeText(GoogleLogInActivity.this, token, Toast.LENGTH_LONG).show();
                     }
                 });
     }

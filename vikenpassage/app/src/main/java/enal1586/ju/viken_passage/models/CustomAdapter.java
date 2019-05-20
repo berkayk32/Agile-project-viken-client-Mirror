@@ -38,7 +38,7 @@ public class CustomAdapter extends ArrayAdapter<HistoryModel> implements View.On
 
         int position=(Integer) v.getTag();
         if (getItem(position) instanceof HistoryModel) {
-            HistoryModel historyModel = getItem(position);
+            //HistoryModel historyModel = getItem(position);
         } else {
             makeText(v.getContext(), "onClick failed, getItem is not of type", LENGTH_SHORT).show();
         }

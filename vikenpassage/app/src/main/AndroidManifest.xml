@@ -24,7 +24,6 @@
 
         <activity android:name=".controllers.GPS" />
         <activity android:name=".controllers.GoogleLogInActivity" />
-        <activity android:name=".controllers.AccountActivity" />
         <activity android:name=".controllers.ContentActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
