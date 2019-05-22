@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import enal1586.ju.viken_passage.R;
 
 public class LogInActivity extends AppCompatActivity {
@@ -31,16 +34,17 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     public void googleLogIn(View view) {
-        EditText bluetoothText = findViewById(R.id.bluetoothET);
-        if (bluetoothText.getText().toString().equals("")) {
+        EditText bthMacAddress = findViewById(R.id.bluetoothET);
+        String macAddress = bthMacAddress.getText().toString();
+        if (isValidMacAddress(macAddress)) {
             Toast.makeText(
                     this,
-                    "You need to add your bluetooth mac address.",
+                    "Enter Valid Mac Address.",
                     Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent(this, GoogleLogInActivity.class);
-        intent.putExtra("MACADDRESS", bluetoothText.getText().toString());
+        intent.putExtra("MACADDRESS", bthMacAddress.getText().toString());
         startActivityForResult(intent, 5);
     }
 
@@ -66,6 +70,16 @@ public class LogInActivity extends AppCompatActivity {
     public void onBackPressed() {
         //TODO add timer and ask if user wants to exite program
 
+    }
+    private boolean isValidMacAddress(String macaddress) {
+        if(macaddress.equals("")){
+            return false;
+        }
+        String MAC_PATTERN = "((?:[a-zA-Z0-9]{2}[:-]){5}[a-zA-Z0-9]{2})";
+
+        Pattern pattern = Pattern.compile(MAC_PATTERN);
+        Matcher matcher = pattern.matcher(macaddress);
+        return matcher.matches();
     }
 
 }
