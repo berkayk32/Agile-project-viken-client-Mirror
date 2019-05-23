@@ -175,8 +175,8 @@ public class GoogleLogInActivity extends AppCompatActivity {
                             FirebaseUser loggedInUser = mAuth.getCurrentUser();
                             assert loggedInUser != null;
                             makeText(GoogleLogInActivity.this, "Welcome " + loggedInUser.getEmail(), LENGTH_SHORT).show();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            initiateUser(user.getEmail());
+                            FirebaseUser currentUseruser = mAuth.getCurrentUser();
+                            initiateUser(currentUseruser.getEmail());
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
