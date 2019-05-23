@@ -36,7 +36,7 @@ public class LogInActivity extends AppCompatActivity {
     public void googleLogIn(View view) {
         EditText bthMacAddress = findViewById(R.id.bluetoothET);
         String macAddress = bthMacAddress.getText().toString();
-        if (isValidMacAddress(macAddress)) {
+        if (!isValidMacAddress(macAddress)) {
             Toast.makeText(
                     this,
                     "Enter Valid Mac Address.",

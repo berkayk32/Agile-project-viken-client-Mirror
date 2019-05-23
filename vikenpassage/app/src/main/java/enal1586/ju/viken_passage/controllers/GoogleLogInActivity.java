@@ -98,6 +98,9 @@ public class GoogleLogInActivity extends AppCompatActivity {
                     if (!document.exists()) {
                         createNewUser(userEmail);
                     }
+                    else {
+                        updateDeviceToken(userEmail);
+                    }
                 } /*else { } TODO handle if needed */
             }
         });
@@ -140,6 +143,23 @@ public class GoogleLogInActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void updateDeviceToken(String userEmail) {
+        Map<String, Object> user = new HashMap<>();
+        user.put("deviceToken", FirebaseInstanceId.getInstance().getToken());
+        databaseInstance.collection(USERS).document(userEmail).update(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // TODO: Handle this if it's needed.
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
     @Override
