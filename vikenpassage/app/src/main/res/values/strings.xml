@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">viken-passage</string>
+    <string name="log_in">Log In</string>
+    <string name="user_name">User Name</string>
+    <string name="password">password</string>
+    <string name="my_account">My Account</string>
+    <string name="sign_up">Sign Up</string>
 </resources>
