@@ -69,7 +69,7 @@ public class GoogleLogInActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras != null) {
-                macAddress = extras.getString("MACADDRESS");
+                macAddress = extras.getString("MACADDRESS").toUpperCase();
             }
         }
     }
