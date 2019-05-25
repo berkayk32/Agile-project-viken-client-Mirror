@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -45,6 +46,8 @@ import enal1586.ju.viken_passage.models.HistoryModel;
 public class ContentActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 0;
     private static final int REQUEST_DISCOVER_BT = 1;
+    private static final int LOGIN_INTENT = 2;
+
     ImageView mBlueIv;
     Switch aSwitch;
     Thread timerThread = null;
@@ -71,24 +74,10 @@ public class ContentActivity extends AppCompatActivity {
 
         if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(this, LogInActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, LOGIN_INTENT);
         }
         else {
-            TextView userName = findViewById(R.id.userNameTW);
-            String email = mAuth.getCurrentUser().getEmail();
-            String userNameText = email.substring(0,email.indexOf("@"));
-
-            userName.setText(userNameText);
-
-            expiryDateLabel = findViewById(R.id.freePassLabel);
-
-            list = new ArrayList<>();
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
-
-            ListView listView = findViewById(R.id.listViewOfStuff);
-            listView.setAdapter(adapter);
-
-            syncUser();
+            initiateLogin();
         }
 
         mBlueIv = findViewById(R.id.imageView);
@@ -149,6 +138,35 @@ public class ContentActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void initiateLogin() {
+        TextView userName = findViewById(R.id.userNameTW);
+        String email = mAuth.getCurrentUser().getEmail();
+        String userNameText = email.substring(0,email.indexOf("@"));
+
+        userName.setText(userNameText);
+
+        expiryDateLabel = findViewById(R.id.freePassLabel);
+
+        list = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
+
+        ListView listView = findViewById(R.id.listViewOfStuff);
+        listView.setAdapter(adapter);
+
+        syncUser();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Toast.makeText(this, "Inne!", Toast.LENGTH_SHORT).show();
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(getIntent());
+        overridePendingTransition(0, 0);
     }
 
     private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
@@ -305,11 +323,17 @@ public class ContentActivity extends AppCompatActivity {
                     listView = (ListView) findViewById(R.id.listViewOfStuff);
 
                     historyModels = new ArrayList<>();
+
+                    int totalAmount = 0;
                     for (int i = 0; i < documents.size(); i++) {
                         DocumentSnapshot documentSnapshot = documents.get(i);
                         Map<String, Object> data = documentSnapshot.getData();
+                        totalAmount += Integer.valueOf(data.get("payment").toString());
                         historyModels.add(new HistoryModel(documentSnapshot.getTimestamp("date").toDate(), data.get("payment").toString(),documentSnapshot.getGeoPoint("position")));
                     }
+
+                    TextView viewById = findViewById(R.id.textView4);
+                    viewById.setText(totalAmount + " kr");
 
                     customHistoryAdapter = new CustomAdapter(historyModels, getApplicationContext());
                     listView.setAdapter(customHistoryAdapter);
