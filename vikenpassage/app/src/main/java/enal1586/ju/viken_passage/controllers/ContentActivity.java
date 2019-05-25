@@ -163,7 +163,6 @@ public class ContentActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Toast.makeText(this, "Inne!", Toast.LENGTH_SHORT).show();
         finish();
         overridePendingTransition(0, 0);
         startActivity(getIntent());
