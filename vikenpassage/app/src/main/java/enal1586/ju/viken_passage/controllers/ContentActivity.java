@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -36,6 +39,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +62,7 @@ public class ContentActivity extends AppCompatActivity {
     private final String USERS = "Users";
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseFirestore databaseInstance = FirebaseFirestore.getInstance();
 
     ArrayAdapter adapter = null;
     ArrayList<String> list = null;
@@ -141,6 +145,23 @@ public class ContentActivity extends AppCompatActivity {
         });
     }
 
+
+    private void updateDeviceToken(String userEmail) {
+        Map<String, Object> user = new HashMap<>();
+        databaseInstance.collection(USERS).document(userEmail).update(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // TODO: Handle this if it's needed.
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
     private void initiateLogin() {
         TextView userName = findViewById(R.id.userNameTW);
         String email = mAuth.getCurrentUser().getEmail();
@@ -156,6 +177,7 @@ public class ContentActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listViewOfStuff);
         listView.setAdapter(adapter);
 
+        updateDeviceToken(email);
         syncUser();
     }
 
@@ -163,10 +185,14 @@ public class ContentActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(getIntent());
-        overridePendingTransition(0, 0);
+        if (requestCode == LOGIN_INTENT) {
+
+            finish();
+            overridePendingTransition(0, 0);
+            startActivity(getIntent());
+            overridePendingTransition(0, 0);
+
+        }
     }
 
     private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
@@ -211,7 +237,7 @@ public class ContentActivity extends AppCompatActivity {
 
     private void syncUser() {
 
-        final DocumentReference contactListener = db.collection(USERS).document(mAuth.getCurrentUser().getEmail());
+        final DocumentReference contactListener = databaseInstance.collection(USERS).document(mAuth.getCurrentUser().getEmail());
 
         contactListener.addSnapshotListener(new EventListener< DocumentSnapshot >() {
             @Override
@@ -301,7 +327,7 @@ public class ContentActivity extends AppCompatActivity {
     }
 
     private void updateUserHistory() {
-        db.collection(USERS).document(mAuth.getCurrentUser().getEmail()).collection("history")
+        databaseInstance.collection(USERS).document(mAuth.getCurrentUser().getEmail()).collection("history")
                 .orderBy("date", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
