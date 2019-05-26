@@ -38,6 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import enal1586.ju.viken_passage.R;
 import enal1586.ju.viken_passage.models.CustomAdapter;
@@ -232,9 +233,7 @@ public class ContentActivity extends AppCompatActivity {
                     }
                     else {
                         // Already paid
-
                         startTimerThread(freePass);
-                        //updateTimeLeft(currentTime, freePass);
                     }
 
                     list.clear();
@@ -290,21 +289,16 @@ public class ContentActivity extends AppCompatActivity {
 
     @TargetApi(26)
     private String updateTimeLeft(LocalDateTime currentTime, LocalDateTime freePass) {
-        Duration duration = Duration.between(currentTime, freePass);
-        long seconds = duration.getSeconds() % 60;
-        String stringSeconds = seconds < 10 ? "0" + seconds : "" + seconds;
+        long durationInSeconds = Duration.between(currentTime, freePass).getSeconds();
+        String timeLeftString = String.format("%02d:%02d:%02d", TimeUnit.SECONDS.toHours(durationInSeconds),
+                TimeUnit.SECONDS.toMinutes(durationInSeconds) % TimeUnit.HOURS.toMinutes(1),
+                TimeUnit.SECONDS.toSeconds(durationInSeconds) % TimeUnit.MINUTES.toSeconds(1));
 
-        long minutes = duration.toMinutes() % 60;
-        String stringMinutes = minutes < 10 ? "0" + minutes : "" +  minutes;
-
-        long hours = duration.toHours();
-        String stringHours = hours < 10 ? "0" + hours : "" + hours;
-
-        if (hours > 23) {
+        if (TimeUnit.SECONDS.toHours(durationInSeconds) > 23) {
             return freePass.toString();
         }
 
-        return stringHours + ":" + stringMinutes + ":" + stringSeconds;
+        return timeLeftString;
     }
 
     private void updateUserHistory() {

@@ -98,6 +98,9 @@ public class GoogleLogInActivity extends AppCompatActivity {
                     if (!document.exists()) {
                         createNewUser(userEmail);
                     }
+                    else {
+                        updateDeviceToken(userEmail);
+                    }
                 } /*else { } TODO handle if needed */
             }
         });
@@ -142,6 +145,23 @@ public class GoogleLogInActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    private void updateDeviceToken(String userEmail) {
+        Map<String, Object> user = new HashMap<>();
+        user.put("deviceToken", FirebaseInstanceId.getInstance().getToken());
+        databaseInstance.collection(USERS).document(userEmail).update(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // TODO: Handle this if it's needed.
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -175,8 +195,8 @@ public class GoogleLogInActivity extends AppCompatActivity {
                             FirebaseUser loggedInUser = mAuth.getCurrentUser();
                             assert loggedInUser != null;
                             makeText(GoogleLogInActivity.this, "Welcome " + loggedInUser.getEmail(), LENGTH_SHORT).show();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            initiateUser(user.getEmail());
+                            FirebaseUser currentUseruser = mAuth.getCurrentUser();
+                            initiateUser(currentUseruser.getEmail());
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
