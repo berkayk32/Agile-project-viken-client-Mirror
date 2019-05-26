@@ -21,7 +21,8 @@ import enal1586.ju.viken_passage.R;
 public class LogInActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
+    private static final String SHARED_PREF_MAC = "mac";
+    private static final String KEY_MAC = "key_mac";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +45,7 @@ public class LogInActivity extends AppCompatActivity {
     public void googleLogIn(View view) {
         EditText bthMacAddress = findViewById(R.id.bluetoothET);
         String macAddress = bthMacAddress.getText().toString();
+        getMacAddressFromSharedPreferences();
         if (!isValidMacAddress(macAddress)) {
             Toast.makeText(
                     this,
@@ -51,8 +53,12 @@ public class LogInActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        else {
+            //Save MacAddress To Shared Preferences
+            saveMacAddressToSharedPreferences(macAddress);
+        }
         Intent intent = new Intent(this, GoogleLogInActivity.class);
-        intent.putExtra("MACADDRESS", bthMacAddress.getText().toString());
+        intent.putExtra("MACADDRESS", getMacAddressFromSharedPreferences());
         startActivityForResult(intent, 5);
     }
 
@@ -88,6 +94,23 @@ public class LogInActivity extends AppCompatActivity {
         Pattern pattern = Pattern.compile(MAC_PATTERN);
         Matcher matcher = pattern.matcher(macaddress);
         return matcher.matches();
+    }
+    private String getMacAddressFromSharedPreferences(){
+        SharedPreferences sp = getSharedPreferences(SHARED_PREF_MAC, MODE_PRIVATE);
+        String macAddress = sp.getString(KEY_NAME, null);
+
+        if (macAddress != null) {
+            return macAddress;
+        }
+        return null;
+    }
+    private void saveMacAddressToSharedPreferences(String macAddress){
+        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putString(KEY_NAME, macAddress);
+
+        editor.apply();
     }
 
 }
