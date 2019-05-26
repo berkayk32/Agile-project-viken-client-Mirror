@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/gradient_list"
+    android:id="@+id/layout"
     android:layout_height="match_parent">
 
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,6 +58,9 @@
             android:layout_marginEnd="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginBottom="10dp"
+            android:background="@drawable/et_bg"
+            android:padding="16dp"
+
             android:ems="10"
             android:gravity="center"
             android:hint="Bluetooth Adress"
@@ -62,23 +72,40 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginBottom="10dp"
+            android:background="@drawable/btn_bg"
             android:onClick="SettingsButtonClicked"
+            android:textStyle="bold"
             android:text="Settings" />
 
-        <com.google.android.gms.common.SignInButton
+        <TextView
             android:id="@+id/btnLogInGoogle"
-            android:layout_width="332dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_width="190dp"
+            android:layout_height="68dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="50dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/log_in" />
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/btn_bg"
+
+            android:drawableStart="@drawable/ic_google_logo"
+
+            android:drawablePadding="8dp"
+            android:foregroundGravity="center_vertical|center"
+            android:gravity="center"
+            android:text="@string/sign_in_with_google"
+            android:textColor="@color/login_form_details"
+            android:textStyle="bold"
+            tools:ignore="RtlCompat" />
+
+
 
     </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>
