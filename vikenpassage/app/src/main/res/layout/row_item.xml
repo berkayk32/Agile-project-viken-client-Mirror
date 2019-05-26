@@ -12,7 +12,8 @@
         android:layout_alignParentTop="true"
         android:text="Payment: "
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black" />
+        android:textStyle="bold"
+        android:textColor="#fdff0a" />
 
 
     <TextView
@@ -22,7 +23,8 @@
         android:layout_below="@+id/Payment"
         android:layout_marginTop="5dp"
         android:text="Date: "
-        android:textColor="@android:color/black" />
+        android:textStyle="bold"
+        android:textColor="#ff334c" />
 
     <TextView
         android:id="@+id/Location"
@@ -31,6 +33,7 @@
         android:layout_below="@+id/Timestamp"
         android:layout_marginTop="5dp"
         android:text="Location: "
+        android:textStyle="bold"
         android:textColor="@android:color/black" />
 
 

@@ -3,6 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/gradient_list"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,10 +19,12 @@
         android:layout_marginRight="28dp"
         android:layout_marginBottom="32dp"
         android:text="Bluetooth"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/freePassLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/btn_bg"/>
 
     <ImageView
         android:id="@+id/imageView"
@@ -31,28 +35,56 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/common_google_signin_btn_text_dark_disabled"
+
         app:layout_constraintEnd_toStartOf="@+id/bluetoothSwitch"
         app:layout_constraintStart_toEndOf="@+id/button"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/stat_sys_data_bluetooth" />
+        app:srcCompat="@android:drawable/stat_sys_data_bluetooth"
+        android:background="@drawable/et_bg"/>
 
-    <Button
+    <TextView
         android:id="@+id/button"
-        android:layout_width="119dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+
+
+        android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
+
         android:layout_marginLeft="13dp"
+
         android:layout_marginTop="24dp"
+
         android:layout_marginEnd="32dp"
+
+
         android:layout_marginRight="32dp"
+
         android:layout_marginBottom="16dp"
+
+
+
+
+        android:background="@drawable/btn_bg"
+
+
+        android:drawableStart="@drawable/ic_settings_power_black_24dp"
+
+        android:drawableLeft="@drawable/ic_settings_power_black_24dp"
+
+        android:drawablePadding="8dp"
         android:onClick="logoutButtonClicked"
         android:text="Log out"
+
+        android:textColor="@color/login_form_details"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/userNameTW"
         app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+
+/>
+
+
 
     <TextView
         android:id="@+id/freePassLabel"
@@ -62,27 +94,31 @@
         android:layout_marginEnd="35dp"
         android:layout_marginRight="35dp"
         android:layout_marginBottom="32dp"
-        android:text="Free Pass 0,00Kr"
+        android:text="Free Pass 0,00"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/listViewOfStuff"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        android:background="@drawable/et_bg"/>
 
     <TextView
         android:id="@+id/userNameTW"
-        android:layout_width="134dp"
+        android:layout_width="100dp"
         android:layout_height="25dp"
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"
+        android:background="@drawable/et_bg"
         android:text="User Name"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/listViewOfStuff"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/listViewOfStuff"
-        android:layout_width="395dp"
+        android:layout_width="wrap_content"
         android:layout_height="315dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -90,9 +126,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="60dp"
+        android:background="@drawable/btn_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -104,19 +140,9 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="32dp"
         android:text="Tot 0,00 Kr"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="32dp"
-        android:text="GPS"
-        android:onClick="GPSButtonClicked"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/et_bg"/>
 
 </android.support.constraint.ConstraintLayout>
