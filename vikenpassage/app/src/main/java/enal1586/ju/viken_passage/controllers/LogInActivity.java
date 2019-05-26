@@ -1,6 +1,7 @@
 package enal1586.ju.viken_passage.controllers;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -97,7 +98,7 @@ public class LogInActivity extends AppCompatActivity {
     }
     private String getMacAddressFromSharedPreferences(){
         SharedPreferences sp = getSharedPreferences(SHARED_PREF_MAC, MODE_PRIVATE);
-        String macAddress = sp.getString(KEY_NAME, null);
+        String macAddress = sp.getString(KEY_MAC, null);
 
         if (macAddress != null) {
             return macAddress;
@@ -105,10 +106,10 @@ public class LogInActivity extends AppCompatActivity {
         return null;
     }
     private void saveMacAddressToSharedPreferences(String macAddress){
-        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(SHARED_PREF_MAC, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
-        editor.putString(KEY_NAME, macAddress);
+        editor.putString(KEY_MAC, macAddress);
 
         editor.apply();
     }
