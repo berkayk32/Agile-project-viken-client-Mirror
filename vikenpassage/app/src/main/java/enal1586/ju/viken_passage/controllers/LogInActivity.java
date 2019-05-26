@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import enal1586.ju.viken_passage.BluetoothFunctions;
 import enal1586.ju.viken_passage.R;
 
 public class LogInActivity extends AppCompatActivity {
@@ -114,9 +115,9 @@ public class LogInActivity extends AppCompatActivity {
     private void setMacAddressToTextView(){
         EditText bthMacAddress = findViewById(R.id.bluetoothET);
         if(getMacAddressFromSharedPreferences()!=null){
+
             bthMacAddress.setText(getMacAddressFromSharedPreferences());
         }
-
     }
 
 }
