@@ -41,12 +41,12 @@ public class LogInActivity extends AppCompatActivity {
                 googleLogIn(view);
             }
         });
+        setMacAddressToTextView();
     }
 
     public void googleLogIn(View view) {
         EditText bthMacAddress = findViewById(R.id.bluetoothET);
         String macAddress = bthMacAddress.getText().toString();
-        getMacAddressFromSharedPreferences();
         if (!isValidMacAddress(macAddress)) {
             Toast.makeText(
                     this,
@@ -54,7 +54,7 @@ public class LogInActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        else {
+        else if(isValidMacAddress(macAddress)) {
             //Save MacAddress To Shared Preferences
             saveMacAddressToSharedPreferences(macAddress);
         }
@@ -100,7 +100,7 @@ public class LogInActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences(SHARED_PREF_MAC, MODE_PRIVATE);
         String macAddress = sp.getString(KEY_MAC, null);
 
-        if (macAddress != null) {
+        if (macAddress != null && isValidMacAddress(macAddress)) {
             return macAddress;
         }
         return null;
@@ -108,10 +108,15 @@ public class LogInActivity extends AppCompatActivity {
     private void saveMacAddressToSharedPreferences(String macAddress){
         SharedPreferences sp = getSharedPreferences(SHARED_PREF_MAC, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-
         editor.putString(KEY_MAC, macAddress);
-
         editor.apply();
+    }
+    private void setMacAddressToTextView(){
+        EditText bthMacAddress = findViewById(R.id.bluetoothET);
+        if(getMacAddressFromSharedPreferences()!=null){
+            bthMacAddress.setText(getMacAddressFromSharedPreferences());
+        }
+
     }
 
 }
