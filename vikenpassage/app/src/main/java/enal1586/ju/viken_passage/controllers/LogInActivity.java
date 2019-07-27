@@ -16,8 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import enal1586.ju.viken_passage.BluetoothFunctions;
 import enal1586.ju.viken_passage.R;
 
 public class LogInActivity extends AppCompatActivity {
@@ -87,7 +85,7 @@ public class LogInActivity extends AppCompatActivity {
         //TODO add timer and ask if user wants to exite program
 
     }
-    private boolean isValidMacAddress(String macaddress) {
+    public boolean isValidMacAddress(String macaddress) {
         if(macaddress.equals("")){
             return false;
         }
@@ -97,7 +95,7 @@ public class LogInActivity extends AppCompatActivity {
         Matcher matcher = pattern.matcher(macaddress);
         return matcher.matches();
     }
-    private String getMacAddressFromSharedPreferences(){
+    public String getMacAddressFromSharedPreferences(){
         SharedPreferences sp = getSharedPreferences(SHARED_PREF_MAC, MODE_PRIVATE);
         String macAddress = sp.getString(KEY_MAC, null);
 
@@ -106,7 +104,7 @@ public class LogInActivity extends AppCompatActivity {
         }
         return null;
     }
-    private void saveMacAddressToSharedPreferences(String macAddress){
+    public void saveMacAddressToSharedPreferences(String macAddress){
         SharedPreferences sp = getSharedPreferences(SHARED_PREF_MAC, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(KEY_MAC, macAddress);
